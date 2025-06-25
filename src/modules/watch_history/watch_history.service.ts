@@ -1,15 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWatchHistoryDto } from './dto/create-watch_history.dto';
 import { UpdateWatchHistoryDto } from './dto/update-watch_history.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { WatchHistory } from 'src/core/models/watch_history.model';
+import { User } from 'src/core/models/user.model';
+import { Movie } from 'src/core/models/movies.model';
 
 @Injectable()
 export class WatchHistoryService {
+  constructor(@InjectModel(WatchHistory) private watchHistory: typeof WatchHistory){}
   create(createWatchHistoryDto: CreateWatchHistoryDto) {
     return 'This action adds a new watchHistory';
   }
 
-  findAll() {
-    return `This action returns all watchHistory`;
+  async findAll() {
+    let data = this.watchHistory.findAll({
+      include:[
+        {
+          model:User
+        },
+        {
+          model:Movie
+        }
+      ]
+    })
+
+
+    return data
   }
 
   findOne(id: number) {

@@ -3,7 +3,7 @@ import { WatchHistoryService } from './watch_history.service';
 import { CreateWatchHistoryDto } from './dto/create-watch_history.dto';
 import { UpdateWatchHistoryDto } from './dto/update-watch_history.dto';
 
-@Controller('watch-history')
+@Controller('api/watch-history')
 export class WatchHistoryController {
   constructor(private readonly watchHistoryService: WatchHistoryService) {}
 
@@ -12,7 +12,7 @@ export class WatchHistoryController {
     return this.watchHistoryService.create(createWatchHistoryDto);
   }
 
-  @Get()
+  @Get("all")
   findAll() {
     return this.watchHistoryService.findAll();
   }

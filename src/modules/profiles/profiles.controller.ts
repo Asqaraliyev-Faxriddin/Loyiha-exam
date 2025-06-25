@@ -3,7 +3,7 @@ import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
-@Controller('profiles')
+@Controller('api/profiles')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
@@ -12,7 +12,7 @@ export class ProfilesController {
     return this.profilesService.create(createProfileDto);
   }
 
-  @Get()
+  @Get("all")
   findAll() {
     return this.profilesService.findAll();
   }

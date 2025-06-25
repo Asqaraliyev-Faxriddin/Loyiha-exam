@@ -12,11 +12,15 @@ export class Profile extends Model {
   @Column(DataType.UUID)
   user_id: string;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User,{ as: 'mainProfile' })
   user: User;
 
   @Column(DataType.STRING)
   full_name: string;
+
+  @Default("")
+  @Column(DataType.STRING)
+  avatar_url: string;
 
   @Column(DataType.STRING)
   phone: string;

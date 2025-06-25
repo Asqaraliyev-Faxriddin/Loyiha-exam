@@ -30,11 +30,9 @@ export class User extends Model {
   })
   role: string;
 
-  @Default("")
-  @Column(DataType.STRING)
-  avatar_url: string;
 
-  @HasOne(() => Profile) 
+
+  @HasOne(() => Profile, { as: 'profile' } ) 
   profile: Profile  ;
 
   @HasMany(() => UserSubscription)

@@ -24,6 +24,11 @@ import { Movie } from './core/models/movies.model';
 import { MovieCategory } from './core/models/movie_categories.model';
 import { MovieFile } from './core/models/movie_files.model';
 import { Payment } from './core/models/payments.model';
+import { SubscriptionPlan } from './core/models/subscription_plans.model';
+import { UserSubscription } from './core/models/user_subscriptions.model';
+import { Favorite } from './core/models/favorites.model';
+import { Profile } from './core/models/profiles.model';
+import { Category } from './core/models/categories.model';
 
 @Module({
   imports: [
@@ -37,6 +42,10 @@ import { Payment } from './core/models/payments.model';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASS'),
         database: config.get('DB_NAME'),
+        models: [
+        User, SubscriptionPlan, UserSubscription, Payment,Movie,WatchHistory,
+        Review,MovieFile,MovieCategory,Favorite,Profile,Category
+        ],
         autoLoadModels: true,
         synchronize: true, 
       }),

@@ -19,6 +19,11 @@ export class PaymentsService {
     include:[
       {
         model:UserSubscription,
+        include:[User]
+
+      },
+      {
+        model:UserSubscription,
         include:[User,SubscriptionPlan]
       }
     ]

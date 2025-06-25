@@ -3,7 +3,7 @@ import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 
-@Controller('reviews')
+@Controller('api/reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
@@ -12,7 +12,7 @@ export class ReviewsController {
     return this.reviewsService.create(createReviewDto);
   }
 
-  @Get()
+  @Get("all")
   findAll() {
     return this.reviewsService.findAll();
   }

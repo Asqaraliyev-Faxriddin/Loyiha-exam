@@ -1,4 +1,5 @@
-import { Column, DataType, Default, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { Column, DataType, Default, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { UserSubscription } from "./user_subscriptions.model";
 
 @Table({tableName:"subscription_plans"})
 export class SubscriptionPlan extends Model {
@@ -22,4 +23,7 @@ export class SubscriptionPlan extends Model {
     @Default(true)
     @Column(DataType.BOOLEAN)
     is_active: boolean;
+
+    @HasMany(() => UserSubscription)
+    subscriptions: UserSubscription[];
   }

@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Profile } from 'src/core/models/profiles.model';
+import { User } from 'src/core/models/user.model';
 
 @Injectable()
 export class ProfilesService {
+  constructor(@InjectModel(Profile) private profileService:typeof Profile){}
   create(createProfileDto: CreateProfileDto) {
     return 'This action adds a new profile';
   }
 
-  findAll() {
-    return `This action returns all profiles`;
+  async findAll() {
+    let data = await this.profileService.findAll({
+      include:[
+        {
+          model:User,as: 'mainProfile' 
+        }
+      ]
+    })
+    return data 
   }
 
   findOne(id: number) {

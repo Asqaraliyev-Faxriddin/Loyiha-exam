@@ -3,7 +3,7 @@ import { UserSubscriptionsService } from './user_subscriptions.service';
 import { CreateUserSubscriptionDto } from './dto/create-user_subscription.dto';
 import { UpdateUserSubscriptionDto } from './dto/update-user_subscription.dto';
 
-@Controller('user-subscriptions')
+@Controller('api/user-subscriptions')
 export class UserSubscriptionsController {
   constructor(private readonly userSubscriptionsService: UserSubscriptionsService) {}
 
@@ -12,7 +12,7 @@ export class UserSubscriptionsController {
     return this.userSubscriptionsService.create(createUserSubscriptionDto);
   }
 
-  @Get()
+  @Get("all")
   findAll() {
     return this.userSubscriptionsService.findAll();
   }

@@ -1,4 +1,4 @@
-import { Column, DataType, Default, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, Default, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { UserSubscription } from "./user_subscriptions.model";
 import { PaymentMethod,PaymentStatus} from "../types/user";
 
@@ -12,6 +12,9 @@ export class Payment extends Model {
   @ForeignKey(() => UserSubscription)
   @Column(DataType.UUID)
   user_subscription_id: string;
+
+  @BelongsTo(() => UserSubscription)
+  user_subscription: UserSubscription;
 
   @Column(DataType.DECIMAL(10, 2))
   amount: number;

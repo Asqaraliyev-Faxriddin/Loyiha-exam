@@ -3,7 +3,7 @@ import { SubscriptionPlansService } from './subscription_plans.service';
 import { CreateSubscriptionPlanDto } from './dto/create-subscription_plan.dto';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription_plan.dto';
 
-@Controller('subscription-plans')
+@Controller('api/subscription-plans')
 export class SubscriptionPlansController {
   constructor(private readonly subscriptionPlansService: SubscriptionPlansService) {}
 
@@ -12,7 +12,7 @@ export class SubscriptionPlansController {
     return this.subscriptionPlansService.create(createSubscriptionPlanDto);
   }
 
-  @Get()
+  @Get("all")
   findAll() {
     return this.subscriptionPlansService.findAll();
   }
