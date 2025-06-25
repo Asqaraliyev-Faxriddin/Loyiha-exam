@@ -1,8 +1,9 @@
 
-import { BelongsTo, Column, DataType, Default, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, Default, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 import { SubscriptionPlan } from "./subscription_plans.model";
 import {UserSubscriptionStatus } from "../types/user";
+import { Payment } from "./payments.model";
 
 @Table({ tableName: 'user_subscriptions' })
 export class UserSubscription extends Model {
@@ -34,6 +35,14 @@ export class UserSubscription extends Model {
   @Column(DataType.BOOLEAN)
   auto_renew: boolean;
 
-  @ BelongsTo(() => User)
+  @BelongsTo(() => User)
   users: User;
+
+  @BelongsTo(() => SubscriptionPlan)
+  subscriptionplan  : SubscriptionPlan;
+
+  @HasMany(()=>Payment)
+  payment:Payment
+
+
 }
