@@ -1,0 +1,63 @@
+import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { ProfilesModule } from './modules/profiles/profiles.module';
+import { SubscriptionPlansModule } from './modules/subscription_plans/subscription_plans.module';
+import { UserSubscriptionsModule } from './modules/user_subscriptions/user_subscriptions.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { MoviesModule } from './modules/movies/movies.module';
+import { MovieCategoriesModule } from './modules/movie_categories/movie_categories.module';
+import { MovieFilesModule } from './modules/movie_files/movie_files.module';
+import { FavoritesModule } from './modules/favorites/favorites.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { WatchHistoryModule } from './modules/watch_history/watch_history.module';
+import { MailerModule } from './common/mailer/mailer.module';
+import { RedicService } from './common/redic/redic.service';
+import { RedicModule } from './common/redic/redic.module';
+import { User } from './core/models/user.model';
+import { WatchHistory } from './core/models/watch_history.model';
+import { Review } from './core/models/reviews.model';
+import { Movie } from './core/models/movies.model';
+import { MovieCategory } from './core/models/movie_categories.model';
+import { MovieFile } from './core/models/movie_files.model';
+import { Payment } from './core/models/payments.model';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), 
+    SequelizeModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        dialect: 'postgres',
+        host: config.get('DB_HOST'),
+        port: parseInt(config.get('DB_PORT') || '5432'),
+        username: config.get('DB_USERNAME'),
+        password: config.get('DB_PASS'),
+        database: config.get('DB_NAME'),
+        autoLoadModels: true,
+        synchronize: true, 
+      }),
+    }),
+
+    UserModule,
+    AuthModule,
+    ProfilesModule,
+    SubscriptionPlansModule,
+    UserSubscriptionsModule,
+    PaymentsModule,
+    CategoriesModule,
+    MoviesModule,
+    MovieCategoriesModule,
+    MovieFilesModule,
+    FavoritesModule,
+    ReviewsModule,
+    WatchHistoryModule,
+    MailerModule,
+    RedicModule,
+  ],
+  providers: [RedicService],
+})
+export class AppModule {}
