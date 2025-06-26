@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,31 +7,58 @@ import { User } from 'src/core/models/user.model';
 
 @Injectable()
 export class ProfilesService {
-  constructor(@InjectModel(Profile) private profileService:typeof Profile){}
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
+  constructor(@InjectModel(Profile) private profileService: typeof Profile) {}
+
+  async create(createProfileDto: Required<CreateProfileDto>,avatar_url:string,user_id:string) {
+    const status = await this.profileService.findOne({
+      where: { user_id: user_id },
+    });
+
+    if (status) {
+      throw new ConflictException("Ushbu foydalanuvchining profili allaqachon mavjud");
+    }
+
+    const data = await this.profileService.create({...createProfileDto,avatar_url});
+    return {
+      message: "Profil yaratildi",
+      data,
+    };
   }
 
   async findAll() {
-    let data = await this.profileService.findAll({
-      include:[
-        {
-          model:User,as: 'mainProfile' 
-        }
-      ]
-    })
-    return data 
+    const data = await this.profileService.findAll({
+      include: [{ model: User, as: 'mainProfile' }],
+    });
+    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} profile`;
+  async findOne(id: string) {
+    const data = await this.profileService.findByPk(id, {
+      include: [{ model: User, as: 'mainProfile' }],
+    });
+    if (!data) throw new NotFoundException("Profil topilmadi");
+
+    return data;
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
+  async update(id: string, updateProfileDto: UpdateProfileDto) {
+    const data = await this.profileService.findByPk(id);
+    if (!data) throw new NotFoundException("Profil topilmadi");
+
+    await this.profileService.update(updateProfileDto, { where: { id } });
+
+    return {
+      message: "Profil yangilandi",
+      data: await this.profileService.findByPk(id),
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} profile`;
+  async remove(id: string) {
+    const count = await this.profileService.destroy({ where: { id } });
+    if (!count) throw new NotFoundException("Profil topilmadi");
+
+    return {
+      message: "Profil o'chirildi",
+    };
   }
 }
