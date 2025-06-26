@@ -6,7 +6,7 @@ import { Movie } from "./movies.model";
 export class MovieCategory extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @ForeignKey(() => Movie)
@@ -17,9 +17,15 @@ export class MovieCategory extends Model {
   @Column(DataType.UUID)
   category_id: string;
 
-  @BelongsTo(()=> Movie)
+  @BelongsTo(()=> Movie, {
+    foreignKey: 'movie_id',
+    onDelete: 'CASCADE'
+  })
   movie:Movie
 
-  @BelongsTo(()=> Category)
+  @BelongsTo(()=>  Category, {
+    foreignKey: 'category_id',
+    onDelete: 'CASCADE' 
+  })
   category:Category
 }

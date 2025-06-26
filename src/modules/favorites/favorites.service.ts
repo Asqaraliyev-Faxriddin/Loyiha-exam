@@ -8,7 +8,11 @@ import { Movie } from 'src/core/models/movies.model';
 
 @Injectable()
 export class FavoritesService {
-  constructor(@InjectModel(Favorite) private favoriteService:typeof Favorite){}
+  constructor(@InjectModel(Favorite) private favoriteService:typeof Favorite,
+              @InjectModel(User) private usermodel: typeof User,
+              @InjectModel(Movie) private moviemodel: typeof Movie
+
+){}
 
 
   async findAll() {
@@ -26,8 +30,12 @@ export class FavoritesService {
 
   }
 
-  async create(payload: Required<CreateFavoriteDto>) {
+  async create(payload: Required<CreateFavoriteDto>,user_id:string) {
     
+    let movie = await this.moviemodel.findAll({where:{id:payload.movie_id}})
+    let user = await this.usermodel.findAll({where:{id:user_id}})
+    if(!movie || !user) throw new ConflictException("movie or user id not found")
+
     let data = await this.favoriteService.create(payload)
 
     return data
@@ -35,39 +43,41 @@ export class FavoritesService {
 
 
   async findOne(payload: any) {
-    const allowedFields = ['id', 'user_id', 'movie_id'];
-
-    for (const key in payload) {
-    // @ts-ignore
-      if (!allowedFields.includes(key)) {
-        throw new ConflictException(`Noto'g'ri ustun ${key}`);
+    let allowedFields = ['id', 'user_id', 'movie_id'];
+  
+    for(let key in payload) {
+      // @ts-ignore
+      if(!allowedFields.includes(key)) {
+        throw new ConflictException(`Noto'g'ri ustun: ${key}`);
       }
+    }
+  
+    let movie = await this.moviemodel.findOne({ where: { id: payload.movie_id } });
+    let user = await this.usermodel.findOne({ where: { id: payload.user_id } });
+  
+    if (!movie || !user) {
+      throw new ConflictException("Movie yoki User topilmadi");
+    }
+  
     let data = await this.favoriteService.findAll({
-      where: {
-        ...payload
-      }
-
-    })
-
-    return data
+      where: { ...payload },
+      include: [User, Movie]
+    });
+  
+    return data;
   }
-}
+  
 
-  async update(id: number, updateCategoryDto: UpdateFavoriteDto) {
+  async update(id: string, payload: UpdateFavoriteDto) {
 
-    let data = await this.favoriteService.findOne({
-      where: {
-        id
-      }
+    let data = await this.favoriteService.findOne({ where: { id } });
+    if (!data) throw new NotFoundException("Favorite topilmadi");
 
-    })
-    if(!data) throw new NotFoundException("user not found ")
-
-      let categoryUpdate = await this.favoriteService.update(updateCategoryDto,{where:{id}})
+    let favorite = await this.favoriteService.update(payload,{where:{id}})
 
     return {
       message:"Malumot o'zgartirildi.",
-      data:categoryUpdate 
+      data:favorite 
     }
   }
   

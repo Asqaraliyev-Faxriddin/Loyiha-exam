@@ -75,7 +75,7 @@ export class CategoriesService {
       }
 
     })
-    if(!data) throw new NotFoundException("user not found ")
+    if(!data) throw new NotFoundException("category not found ")
 
       let categoryUpdate = await this.categoryService.update(updateCategoryDto,{where:{id}})
 

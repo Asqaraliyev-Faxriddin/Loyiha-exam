@@ -9,7 +9,7 @@ import { MovieCategory } from "./movie_categories.model";
 export class Movie extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @Column(DataType.STRING)
@@ -46,16 +46,28 @@ export class Movie extends Model {
   @Column(DataType.UUID)
   created_by: string;
 
-  @HasMany(() => MovieCategory)
+  @HasMany(() => MovieCategory, {
+    foreignKey: 'movie_id',
+    onDelete: 'CASCADE',
+  })
   movie_categories: MovieCategory[];
 
-  @HasMany(() => MovieFile)
+  @HasMany(() => MovieFile, {
+    foreignKey: 'movie_id',
+    onDelete: 'CASCADE',
+  })
   movie_files: MovieFile[];
 
-  @HasMany(() => Review)
+  @HasMany(() => Review, {
+    foreignKey: 'movie_id',
+    onDelete: 'CASCADE',
+  })
   reviews: Review[];
 
-  @BelongsTo(()=>User)
+  @BelongsTo(()=>User, {
+    foreignKey: 'created_by',
+    onDelete: 'CASCADE'
+  })
   users:User
 
 

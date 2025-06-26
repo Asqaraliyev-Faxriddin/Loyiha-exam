@@ -6,20 +6,26 @@ import { Movie } from "./movies.model";
 export class Favorite extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @ForeignKey(() => User)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID,})
   user_id: string;
 
   @ForeignKey(() => Movie)
   @Column(DataType.UUID)
   movie_id: string;
 
-  @BelongsTo(()=>Movie)
+  @BelongsTo(()=> Movie, {
+    foreignKey: 'movie_id',
+    onDelete: 'CASCADE' 
+  })
   movie:Movie
 
-  @BelongsTo(()=>User)
+  @BelongsTo(()=>User, {
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE'  
+  })
   user:User
 }

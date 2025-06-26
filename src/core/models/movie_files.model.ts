@@ -6,7 +6,7 @@ import { MovieQuality } from "../types/user";
 export class MovieFile extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @ForeignKey(() => Movie)
@@ -24,6 +24,9 @@ export class MovieFile extends Model {
   @Column(DataType.STRING)
   language: string;
 
-  @BelongsTo(()=>Movie)
+  @BelongsTo(()=>Movie,{
+    foreignKey:"movie_id",
+    onDelete:"CASCADE"
+  })
   movie:Movie
 }

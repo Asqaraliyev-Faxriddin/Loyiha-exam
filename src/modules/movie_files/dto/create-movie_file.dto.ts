@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsUUID } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { MovieQuality } from "src/core/types/user";
 
 export class CreateMovieFileDto {
@@ -12,4 +12,12 @@ export class CreateMovieFileDto {
     @IsNotEmpty()
     @IsEnum(MovieQuality)
     quality:MovieQuality
+
+    @IsNotEmpty()
+    @IsString()
+    @IsNotEmpty()
+    language: string;
+
+
+
 }

@@ -32,16 +32,28 @@ export class User extends Model {
 
 
 
-  @HasOne(() => Profile, { as: 'profile' } ) 
-  profile: Profile  ;
+  @HasOne(() => Profile, {
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE',
+    as: 'profile'
+  })
 
-  @HasMany(() => UserSubscription)
+  @HasMany(() => UserSubscription, {
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE',
+  })
   user_subscriptions: UserSubscription;
 
-  @HasMany(() => Movie)
+  @HasMany(() => Movie, {
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE',
+  })
   movies: Movie;
 
-  @HasMany(() => Favorite)
+  @HasMany(() => Favorite, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE',
+})
   favorites: Favorite;
 
   @HasMany(() => Review)

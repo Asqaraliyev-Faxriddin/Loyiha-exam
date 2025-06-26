@@ -6,7 +6,7 @@ import { User } from "./user.model";
 export class Category extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @Column(DataType.STRING)
@@ -19,7 +19,10 @@ export class Category extends Model {
   description: string;
 
 
-  @HasMany(()=> MovieCategory)
+  @HasMany(()=> MovieCategory, {
+    foreignKey: 'category_id',      
+    onDelete: 'CASCADE'             
+  })
   moviecategory:MovieCategory
 
   

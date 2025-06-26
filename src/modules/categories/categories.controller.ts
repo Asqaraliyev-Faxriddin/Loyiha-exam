@@ -1,18 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, ParseIntPipe } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, ParseIntPipe, Req, UseGuards} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Request } from 'express';
+import { AuthGuard } from 'src/core/guards/jwt-guard';
+import { RolesGuard } from 'src/core/guards/role-guard';
+import { Roles } from 'src/core/decorators/roles.decorator';
+import { UserRole } from 'src/core/types/user';
 
 @Controller('api/categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Post("create")
-  create(@Body() createCategoryDto: CreateCategoryDto) {
+  @Post('create')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  create( @Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @Get("all")
+  @Get('all')
   findAll() {
     return this.categoriesService.findAll();
   }
@@ -23,12 +30,17 @@ export class CategoriesController {
   }
 
   @Put('update/:id')
-  update(@Param('id',ParseIntPipe) id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesService.update(id, updateCategoryDto);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  update(@Req() req: Request,@Param('id', ParseIntPipe) id: number,@Body() updateCategoryDto: UpdateCategoryDto,) {
+
+    return this.categoriesService.update(id,updateCategoryDto);
   }
 
   @Delete('delete/:id')
-  remove(@Param('id',ParseIntPipe) id: number) {
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  remove( @Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.remove(id);
   }
 }

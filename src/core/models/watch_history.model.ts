@@ -27,9 +27,15 @@ export class WatchHistory extends Model {
   @Column({ field: 'last_watched', type: DataType.DATE })
   last_watched: Date;
 
-  @BelongsTo(()=> User)
+  @BelongsTo(()=> User,{
+    foreignKey:"user_id",
+    onDelete:"CASCADE"
+  })
   users:User
 
-  @BelongsTo(()=>Movie)
+  @BelongsTo(()=> Movie,{
+    foreignKey:"movie_id",
+    onDelete:"CASCADE"
+  })
   movies:Movie
 }

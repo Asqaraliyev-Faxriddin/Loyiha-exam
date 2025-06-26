@@ -7,30 +7,34 @@ import { Category } from 'src/core/models/categories.model';
 import { Movie } from 'src/core/models/movies.model';
 import { User } from 'src/core/models/user.model';
 
-
 @Injectable()
 export class MovieCategoriesService {
-  constructor(@InjectModel(MovieCategory) private movieCategoryService:typeof MovieCategory){}
-  
+  constructor(@InjectModel(MovieCategory) private movieCategoryService: typeof MovieCategory) {}
 
   async findAll() {
-    let data = this.movieCategoryService.findAll({
-      include:[{
-        model:Category
-      },
-      {
-        model:Movie,
-        include:[User]
-      }
+    let data = await this.movieCategoryService.findAll({
+      include: [
+        { model: Category },
+        { model: Movie, include: [User] }
       ]
-    })
-    return data
+    });
+    return data;
   }
-  async create(payload: Required<CreateMovieCategoryDto>) {
-    
-    let data = await this.movieCategoryService.create(payload)
 
-    return data
+  async create(payload: Required<CreateMovieCategoryDto>) {
+    let status = await this.movieCategoryService.findOne({
+     
+         where: {
+        movie_id: payload.movie_id,
+        category_id: payload.category_id
+      
+      }
+    });
+
+    if (status) throw new ConflictException("Bu movie category allaqachon mavjud");
+
+    let data = await this.movieCategoryService.create(payload);
+    return data;
   }
 
 
@@ -38,51 +42,42 @@ export class MovieCategoriesService {
     const allowedFields = ['id', 'category_id', 'movie_id'];
 
     for (const key in payload) {
-    // @ts-ignore
+      // @ts-ignore
       if (!allowedFields.includes(key)) {
         throw new ConflictException(`Noto'g'ri ustun ${key}`);
       }
+  
+    }
+
+
     let data = await this.movieCategoryService.findAll({
-      where: {
-        ...payload
-      }
+    
+      where: { ...payload }
+    });
 
-    })
-
-    return data
+    return data;
   }
-}
 
-  async update(id: number, updateCategoryDto: UpdateMovieCategoryDto) {
+  async update(id: string, updateCategoryDto: UpdateMovieCategoryDto) {
+    
+    let data = await this.movieCategoryService.findOne({ where: { id } });
 
-    let data = await this.movieCategoryService.findOne({
-      where: {
-        id
-      }
+    if (!data) throw new NotFoundException("MovieCategory topilmadi");
 
-    })
-    if(!data) throw new NotFoundException("user not found ")
-
-      let categoryUpdate = await this.movieCategoryService.update(updateCategoryDto,{where:{id}})
+    let categoryUpdate = await this.movieCategoryService.update(updateCategoryDto, { where: { id } });
 
     return {
-      message:"Malumot o'zgartirildi.",
-      data:categoryUpdate 
-    }
-  }
-  
-
-  async remove(id: number) {
-     let data =await this.movieCategoryService.destroy({
-      where: {
-        id
-      }
-
-    })
-    if(!data) throw new NotFoundException("user not found ")
-
-      return "Category o'chirildi."
-
+      message: "Ma'lumot yangilandi",
+    
+      data: categoryUpdate
+    };
   }
 
+  async remove(id: string) {
+    let data = await this.movieCategoryService.destroy({ where: { id } });
+
+    if (!data) throw new NotFoundException("MovieCategory topilmadi");
+
+    return "MovieCategory o'chirildi";
+  }
 }

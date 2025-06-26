@@ -5,14 +5,17 @@ import { User } from './user.model';
 export class Profile extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
+  @Column(DataType.UUID)
   declare id: string;
 
   @ForeignKey(() => User)
   @Column(DataType.UUID)
   user_id: string;
 
-  @BelongsTo(() => User,{ as: 'mainProfile' })
+  @BelongsTo(() => User,{ 
+    foreignKey:"user_id",
+    onDelete:"CASCADE",
+    as: 'mainProfile' })
   user: User;
 
   @Column(DataType.STRING)
@@ -28,7 +31,5 @@ export class Profile extends Model {
   @Column(DataType.STRING)
   country: string;
 
-  @BelongsTo(()=>User)
-  users:User
 
 }
