@@ -9,8 +9,11 @@ import { User } from 'src/core/models/user.model';
 @Injectable()
 export class MovieFilesService {
   constructor(@InjectModel(MovieFile) private movieFileService:typeof MovieFile){}
-  create(createMovieFileDto: CreateMovieFileDto) {
-    return 'This action adds a new movieFile';
+  async create(payload: Required<CreateMovieFileDto>,file_url:string) {
+
+    let data = await this.movieFileService.create({...payload,file_url})
+
+    return data
   }
 
   async findAll() {

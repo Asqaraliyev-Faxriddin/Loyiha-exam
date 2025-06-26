@@ -5,7 +5,7 @@ import { UserSubscription } from "./user_subscriptions.model";
 export class SubscriptionPlan extends Model {
     @PrimaryKey
     @Default(DataType.UUIDV4)
-    @Column(DataType.UUID)
+    @Column({type:DataType.UUID,onDelete: 'CASCADE'})
     declare id: string;
   
     @Column(DataType.STRING)

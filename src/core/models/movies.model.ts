@@ -9,7 +9,7 @@ import { MovieCategory } from "./movie_categories.model";
 export class Movie extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
   declare id: string;
 
   @Column(DataType.STRING)

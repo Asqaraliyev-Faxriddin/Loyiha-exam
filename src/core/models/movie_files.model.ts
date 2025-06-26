@@ -6,7 +6,7 @@ import { MovieQuality } from "../types/user";
 export class MovieFile extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
   declare id: string;
 
   @ForeignKey(() => Movie)

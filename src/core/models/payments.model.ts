@@ -6,7 +6,7 @@ import { PaymentMethod,PaymentStatus} from "../types/user";
 export class Payment extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
   declare id: string;
 
   @ForeignKey(() => UserSubscription)

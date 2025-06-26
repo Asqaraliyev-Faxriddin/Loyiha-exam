@@ -6,7 +6,7 @@ import { Movie } from "./movies.model";
 export class Review extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID,onDelete: 'CASCADE'})
   declare id: string;
 
   @ForeignKey(() => User)

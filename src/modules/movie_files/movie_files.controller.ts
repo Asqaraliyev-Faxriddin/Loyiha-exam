@@ -9,7 +9,7 @@ export class MovieFilesController {
 
   @Post()
   create(@Body() createMovieFileDto: CreateMovieFileDto) {
-    return this.movieFilesService.create(createMovieFileDto);
+    // return this.movieFilesService.create(createMovieFileDto);
   }
 
   @Get("all")

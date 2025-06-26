@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateFavoriteDto } from './create-favorite.dto';
+import { IsNotEmpty, IsUUID } from "class-validator"
 
-export class UpdateFavoriteDto extends PartialType(CreateFavoriteDto) {}
+export class UpdateFavoriteDto {
+
+    @IsNotEmpty()
+    @IsUUID()
+    user_id:string
+
+    
+    @IsNotEmpty()
+    @IsUUID()
+    movie_id:string
+}
