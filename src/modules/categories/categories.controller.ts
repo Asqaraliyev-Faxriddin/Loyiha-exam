@@ -7,7 +7,10 @@ import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { RolesGuard } from 'src/core/guards/role-guard';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserRole } from 'src/core/types/user';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags("Category")
 @Controller('api/categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
@@ -20,11 +23,15 @@ export class CategoriesController {
   }
 
   @Get('all')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get('one')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin,UserRole.User)
   findOne(@Query() payload: any) {
     return this.categoriesService.findOne(payload);
   }

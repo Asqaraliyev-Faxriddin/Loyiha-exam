@@ -7,7 +7,11 @@ import { RolesGuard } from 'src/core/guards/role-guard';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserRole } from 'src/core/types/user';
 import { Request } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
+@ApiTags("Favorite")
 @Controller('api/favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
@@ -28,6 +32,7 @@ export class FavoritesController {
   }
 
   @Get("one")
+  @Roles(UserRole.SuperAdmin, UserRole.Admin,UserRole.User)
   @UseGuards(AuthGuard, RolesGuard)
   findOne(@Req() req: Request) {
     const user_id = req["user"].id;
@@ -42,6 +47,8 @@ export class FavoritesController {
   }
 
   @Delete("delete")
+  @Roles(UserRole.SuperAdmin, UserRole.Admin,UserRole.User)
+  @UseGuards(AuthGuard, RolesGuard)
   remove(@Req() req: Request) {
     const user_id = req["user"].id;
     return this.favoritesService.remove(user_id);

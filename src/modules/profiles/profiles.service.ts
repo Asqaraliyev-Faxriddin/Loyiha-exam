@@ -4,6 +4,8 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Profile } from 'src/core/models/profiles.model';
 import { User } from 'src/core/models/user.model';
+import * as path from "path"
+import * as fs from "fs"
 
 @Injectable()
 export class ProfilesService {
@@ -54,9 +56,19 @@ export class ProfilesService {
   }
 
   async remove(id: string) {
+    const profile = await this.profileService.findOne({where:{id}});
+    if (!profile) throw new NotFoundException("Profil topilmadi");
+  
+    const avatarFile = profile.avatar_url;
+    const filePath = path.join(process.cwd(),'uploads', 'avatar_url', avatarFile);
+  
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  
     const count = await this.profileService.destroy({ where: { id } });
     if (!count) throw new NotFoundException("Profil topilmadi");
-
+  
     return {
       message: "Profil o'chirildi",
     };

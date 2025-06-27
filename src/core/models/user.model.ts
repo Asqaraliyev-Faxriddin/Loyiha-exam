@@ -44,11 +44,6 @@ export class User extends Model {
   })
   user_subscriptions: UserSubscription;
 
-  @HasMany(() => Movie, {
-    foreignKey: 'user_id',
-    onDelete: 'CASCADE',
-  })
-  movies: Movie;
 
   @HasMany(() => Favorite, {
   foreignKey: 'user_id',

@@ -50,9 +50,8 @@ import { Category } from './core/models/categories.model';
         synchronize: true, 
       }),
     }),
-
-    UserModule,
     AuthModule,
+    UserModule,
     ProfilesModule,
     SubscriptionPlansModule,
     UserSubscriptionsModule,

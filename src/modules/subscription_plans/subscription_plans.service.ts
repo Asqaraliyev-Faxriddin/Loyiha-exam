@@ -28,30 +28,35 @@ constructor(@InjectModel(SubscriptionPlan) private subcriptionplan:typeof Subscr
     return data
   }
 
-  findOne(payload:any) {
+ async findOne(id:string) {
+
+    let data = await this.subcriptionplan.findByPk(id)
+
+    return data
     
   }
 
   async update(id: string, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
-    let olduser = await this.subcriptionplan.findByPk(id)
-    if(!olduser) throw new NotFoundException()
+    let oldsubcriptionplan = await this.subcriptionplan.findByPk(id)
+    if(!oldsubcriptionplan) throw new NotFoundException()
     
+    let  data = await this.subcriptionplan.update({...updateSubscriptionPlanDto},{where:{id}})
 
     return {
-      message:"Malumot o'zgartirildi.",
-      data:"s"
+      message:"subcriptionplan updated",
+      data
     } 
   }
 
  async remove(id: string) {
     
     let olduser = await this.subcriptionplan.findByPk(id)
-    if(!olduser) throw new NotFoundException()
+    if(!olduser) throw new NotFoundException("subcriptionplan not found")
 
     await this.subcriptionplan.destroy({where:{id}})
 
     return {
-      message:"Malumot o'chirildi",
+      message:"subcriptionplan deleted",
       succase:true
     }
   }

@@ -8,13 +8,11 @@ import { Movie } from 'src/core/models/movies.model';
 
 @Injectable()
 export class WatchHistoryService {
-  constructor(@InjectModel(WatchHistory) private watchHistory: typeof WatchHistory){}
-  create(createWatchHistoryDto: CreateWatchHistoryDto) {
-    return 'This action adds a new watchHistory';
-  }
+  constructor(@InjectModel(WatchHistory) private watchHistoryModel: typeof WatchHistory){}
+
 
   async findAll() {
-    let data = this.watchHistory.findAll({
+    let data = this.watchHistoryModel.findAll({
       include:[
         {
           model:User
@@ -29,15 +27,27 @@ export class WatchHistoryService {
     return data
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} watchHistory`;
+  async updateWatchHistory(dto: CreateWatchHistoryDto,user_id:string) {
+    let status = await this.watchHistoryModel.findOne({
+      where: {
+        user_id: user_id,
+        movie_id: dto.movie_id,
+      },
+    });
+
+    if (status) {
+      status.watched_duration = dto.watched_duration;
+      status.watched_percentage = dto.watched_percentage;
+      status.last_watched = new Date();
+     
+      await status.save();
+      
+      return status;
+    } else {
+        let data = await this.watchHistoryModel.create({...dto,last_watched: new Date(),});
+
+        return data
+    }
   }
 
-  update(id: number, updateWatchHistoryDto: UpdateWatchHistoryDto) {
-    return `This action updates a #${id} watchHistory`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} watchHistory`;
-  }
 }
