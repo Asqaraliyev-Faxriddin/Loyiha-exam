@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateReviewDto } from './create-review.dto';
+import { IsNotEmpty, Max, Min } from "class-validator";
 
-export class UpdateReviewDto extends PartialType(CreateReviewDto) {}
+export class UpdateReviewDto {
+    @IsNotEmpty()
+    movie_id:string
+
+    @Min(1)
+    @Max(5)
+    rating: number;
+
+    @IsNotEmpty()
+    comment:string
+}

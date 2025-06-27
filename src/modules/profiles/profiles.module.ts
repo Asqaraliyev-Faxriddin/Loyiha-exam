@@ -8,5 +8,6 @@ import { Profile } from 'src/core/models/profiles.model';
   imports:[SequelizeModule.forFeature([Profile])],
   controllers: [ProfilesController],
   providers: [ProfilesService],
+    
 })
 export class ProfilesModule {}

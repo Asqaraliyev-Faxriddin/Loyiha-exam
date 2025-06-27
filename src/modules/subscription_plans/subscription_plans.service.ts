@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscription_plan.dto';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription_plan.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,13 +7,17 @@ import { UserSubscription } from 'src/core/models/user_subscriptions.model';
 
 @Injectable()
 export class SubscriptionPlansService {
-  constructor(@InjectModel(SubscriptionPlan)private subcriptionPlanService:typeof SubscriptionPlan){}
-  create(createSubscriptionPlanDto: CreateSubscriptionPlanDto) {
-    return 'This action adds a new subscriptionPlan';
+constructor(@InjectModel(SubscriptionPlan) private subcriptionplan:typeof SubscriptionPlan,){}
+  async create(payload: Required<CreateSubscriptionPlanDto>) {
+    
+
+    let data = await this.subcriptionplan.create(payload)
+
+    return data
   }
 
   findAll() {
-    let data = this.subcriptionPlanService.findAll({
+    let data = this.subcriptionplan.findAll({
       include:[
         {
           model:UserSubscription
@@ -24,15 +28,31 @@ export class SubscriptionPlansService {
     return data
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscriptionPlan`;
+  findOne(payload:any) {
+    
   }
 
-  update(id: number, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
-    return `This action updates a #${id} subscriptionPlan`;
+  async update(id: string, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
+    let olduser = await this.subcriptionplan.findByPk(id)
+    if(!olduser) throw new NotFoundException()
+    
+
+    return {
+      message:"Malumot o'zgartirildi.",
+      data:"s"
+    } 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subscriptionPlan`;
+ async remove(id: string) {
+    
+    let olduser = await this.subcriptionplan.findByPk(id)
+    if(!olduser) throw new NotFoundException()
+
+    await this.subcriptionplan.destroy({where:{id}})
+
+    return {
+      message:"Malumot o'chirildi",
+      succase:true
+    }
   }
 }

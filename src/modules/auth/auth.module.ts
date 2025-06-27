@@ -9,20 +9,22 @@ import { RedicModule } from 'src/common/redic/redic.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Global()
+@Global()
 @Module({
-    imports:[SequelizeModule.forFeature([User]),
+  imports: [
+    SequelizeModule.forFeature([User]),
     JwtModule.registerAsync({
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: async (config: ConfigService) => ({
-          secret: config.get<string>('Jwt_Acc'), 
-          signOptions: { expiresIn: '40m' },
-        }),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        secret: config.get<string>('Jwt_Acc'),
+        signOptions: { expiresIn: '40m' },
       }),
-    RedicModule
-    
-    ],
-    controllers:[AuthController],
-    providers:[AuthService]
+    }),
+    RedicModule,
+  ],
+  controllers: [AuthController],
+  providers: [AuthService],
+  exports: [JwtModule, AuthService] 
 })
 export class AuthModule {}

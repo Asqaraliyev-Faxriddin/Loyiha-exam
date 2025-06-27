@@ -9,9 +9,6 @@ export class CreateProfileDto {
   @IsNotEmpty()
   full_name: string;
 
-  @IsOptional()
-  @IsString()
-  avatar_url?: string;
 
   @IsOptional()
   @IsPhoneNumber()

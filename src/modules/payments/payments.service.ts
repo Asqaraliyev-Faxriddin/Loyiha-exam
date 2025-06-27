@@ -11,19 +11,22 @@ export class PaymentsService {
   constructor(@InjectModel(Payment) private paymentService: typeof Payment,
               @InjectModel(UserSubscription) private userSubscriptionModel: typeof UserSubscription) {}
 
-  async create(createPaymentDto: Required<CreatePaymentDto>) {
+  async create(payload: Required<CreatePaymentDto>) {
     const subscription = await this.userSubscriptionModel.findOne({
-      where: { id: createPaymentDto.user_subscription_id },
+      where: { id: payload.user_subscription_id },
     });
 
     if (!subscription) {
       throw new ConflictException("Bunday user_subscription mavjud emas");
     }
+    let newusersubscription = await this.userSubscriptionModel.update({status:true},{where:{id:payload.user_subscription_id}})
 
-    const payment = await this.paymentService.create(createPaymentDto);
+    const payment = await this.paymentService.create(payload);
     return {
       message: "To'lov muvaffaqiyatli qo'shildi",
-      data: payment,
+      data: {
+        payment,newusersubscription
+      }
     };
   }
 

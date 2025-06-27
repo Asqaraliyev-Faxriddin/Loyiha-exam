@@ -1,4 +1,22 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateSubscriptionPlanDto } from './create-subscription_plan.dto';
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID, IsJSON } from 'class-validator';
 
-export class UpdateSubscriptionPlanDto extends PartialType(CreateSubscriptionPlanDto) {}
+export class UpdateSubscriptionPlanDto {
+
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  price: number;
+
+  @IsNumber()
+  duration_days: number;
+
+  @IsJSON()
+  features: object;
+
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
+

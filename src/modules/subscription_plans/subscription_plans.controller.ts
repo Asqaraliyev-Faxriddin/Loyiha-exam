@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { SubscriptionPlansService } from './subscription_plans.service';
 import { CreateSubscriptionPlanDto } from './dto/create-subscription_plan.dto';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription_plan.dto';
@@ -8,8 +8,8 @@ export class SubscriptionPlansController {
   constructor(private readonly subscriptionPlansService: SubscriptionPlansService) {}
 
   @Post()
-  create(@Body() createSubscriptionPlanDto: CreateSubscriptionPlanDto) {
-    return this.subscriptionPlansService.create(createSubscriptionPlanDto);
+  create(@Body() payload: CreateSubscriptionPlanDto) {
+    return this.subscriptionPlansService.create(payload);
   }
 
   @Get("all")
@@ -17,18 +17,18 @@ export class SubscriptionPlansController {
     return this.subscriptionPlansService.findAll();
   }
 
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: string) {
-    return this.subscriptionPlansService.findOne(+id);
+    return this.subscriptionPlansService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put('update/:id')
   update(@Param('id') id: string, @Body() updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
-    return this.subscriptionPlansService.update(+id, updateSubscriptionPlanDto);
+    return this.subscriptionPlansService.update(id, updateSubscriptionPlanDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.subscriptionPlansService.remove(+id);
+    return this.subscriptionPlansService.remove(id);
   }
 }
