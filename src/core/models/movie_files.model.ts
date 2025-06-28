@@ -10,7 +10,7 @@ export class MovieFile extends Model {
   declare id: string;
 
   @ForeignKey(() => Movie)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   movie_id: string;
 
   @Column(DataType.STRING)
@@ -24,9 +24,6 @@ export class MovieFile extends Model {
   @Column(DataType.STRING)
   language: string;
 
-  @BelongsTo(()=>Movie,{
-    foreignKey:"movie_id",
-    onDelete:"CASCADE"
-  })
+  @BelongsTo(()=>Movie,)
   movie:Movie
 }

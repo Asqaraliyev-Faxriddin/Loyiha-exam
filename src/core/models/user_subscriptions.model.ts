@@ -13,11 +13,11 @@ export class UserSubscription extends Model {
   declare id: string;
 
   @ForeignKey(() => User)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   user_id: string;
 
   @ForeignKey(() => SubscriptionPlan)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   plan_id: string;
 
   @Default(DataType.NOW)
@@ -35,22 +35,13 @@ export class UserSubscription extends Model {
   @Column(DataType.BOOLEAN)
   auto_renew: boolean;
 
-  @BelongsTo(() => User,{
-    foreignKey:"user_id",
-    onDelete:"CASCADE"
-  })
+  @BelongsTo(() => User)
   users: User;
 
-  @BelongsTo(() => SubscriptionPlan,{
-    foreignKey:"user_subscription_id",
-    onDelete:"CASCADE"
-  })
+  @BelongsTo(() => SubscriptionPlan,)
   subscriptionplan  : SubscriptionPlan;
 
-  @HasMany(()=>Payment, {
-    foreignKey: 'plan_id',   
-    onDelete: 'CASCADE'                   
-  })
+  @HasMany(()=>Payment,)
   payment:Payment
 
 

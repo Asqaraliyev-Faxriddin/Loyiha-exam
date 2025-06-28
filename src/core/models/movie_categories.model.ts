@@ -10,22 +10,16 @@ export class MovieCategory extends Model {
   declare id: string;
 
   @ForeignKey(() => Movie)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   movie_id: string;
 
   @ForeignKey(() => Category)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   category_id: string;
 
-  @BelongsTo(()=> Movie, {
-    foreignKey: 'movie_id',
-    onDelete: 'CASCADE'
-  })
+  @BelongsTo(()=> Movie, )
   movie:Movie
 
-  @BelongsTo(()=>  Category, {
-    foreignKey: 'category_id',
-    onDelete: 'CASCADE' 
-  })
+  @BelongsTo(()=>  Category)
   category:Category
 }

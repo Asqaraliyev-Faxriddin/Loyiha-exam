@@ -9,12 +9,11 @@ export class Profile extends Model {
   declare id: string;
 
   @ForeignKey(() => User)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   user_id: string;
 
   @BelongsTo(() => User,{ 
-    foreignKey:"user_id",
-    onDelete:"CASCADE",
+   
     as: 'mainProfile' })
   user: User;
 

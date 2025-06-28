@@ -59,9 +59,9 @@ export class UserService {
 
        let data = await this.usermodel.destroy({where:{id}})
 
-       if(!data) throw new NotFoundException(" user id not found")
+       if(!data) throw new NotFoundException("user id not found")
 
-        return data
+        return "deleted"
     }
 
     async update(payload:RegisterAuthDto,id:string){

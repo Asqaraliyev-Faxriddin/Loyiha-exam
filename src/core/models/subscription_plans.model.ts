@@ -11,7 +11,7 @@ export class SubscriptionPlan extends Model {
     @Column(DataType.STRING)
     name: string;
   
-    @Column(DataType.DECIMAL(10, 2))z
+    @Column(DataType.DECIMAL(10, 2))
     price: number;
   
     @Column(DataType.INTEGER)
@@ -24,9 +24,6 @@ export class SubscriptionPlan extends Model {
     @Column(DataType.BOOLEAN)
     is_active: boolean;
 
-    @HasMany(() => UserSubscription,{
-        foreignKey:"plan_id",
-        onDelete:"CASCADE"
-    })
+    @HasMany(() => UserSubscription,)
     subscriptions: UserSubscription[];
   }

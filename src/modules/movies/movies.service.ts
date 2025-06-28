@@ -6,6 +6,8 @@ import { Movie } from "src/core/models/movies.model";
 import { User } from "src/core/models/user.model";
 import { Category } from "src/core/models/categories.model";
 import { Op } from "sequelize";
+import * as fs from "fs"
+import * as path from "path"
 
 @Injectable()
 export class MoviesService {
@@ -77,8 +79,6 @@ export class MoviesService {
   };
 
 }
-
-
   
   async update(id: number, updateMovieDto: UpdateMovieDto) {
     const movie = await this.movieService.findByPk(id);
@@ -92,12 +92,23 @@ export class MoviesService {
     };
   }
 
+
+
   async remove(id: string) {
-    const deleted = await this.movieService.destroy({ where: { id } });
-    if (!deleted) throw new NotFoundException("Movie topilmadi");
+    let deleted = await this.movieService.findByPk(id);
+
+    if (!deleted) throw new NotFoundException("Movie file topilmadi");
+    const poster = deleted.poster_url
+    const filePath = path.join(process.cwd(),'uploads', 'posters', poster);
+  
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+ await this.movieService.destroy({where:{id}});
 
     return {
-      message: "Movie o'chirildi",
+      message: "Movie  o'chirildi",
     };
   }
 }

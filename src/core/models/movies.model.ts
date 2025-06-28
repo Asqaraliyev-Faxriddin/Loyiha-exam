@@ -43,31 +43,19 @@ export class Movie extends Model {
   view_count: number;
 
   @ForeignKey(() => User)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   created_by: string;
 
-  @HasMany(() => MovieCategory, {
-    foreignKey: 'movie_id',
-    onDelete: 'CASCADE',
-  })
+  @HasMany(() => MovieCategory,)
   movie_categories: MovieCategory[];
 
-  @HasMany(() => MovieFile, {
-    foreignKey: 'movie_id',
-    onDelete: 'CASCADE',
-  })
+  @HasMany(() => MovieFile,)
   movie_files: MovieFile[];
 
-  @HasMany(() => Review, {
-    foreignKey: 'movie_id',
-    onDelete: 'CASCADE',
-  })
+  @HasMany(() => Review)
   reviews: Review[];
 
-  @BelongsTo(()=>User, {
-    foreignKey: 'created_by',
-    onDelete: 'CASCADE'
-  })
+  @BelongsTo(()=>User,)
   users:User
 
 

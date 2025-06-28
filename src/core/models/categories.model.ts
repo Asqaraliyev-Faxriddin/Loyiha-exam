@@ -19,10 +19,7 @@ export class Category extends Model {
   description: string;
 
 
-  @HasMany(()=> MovieCategory, {
-    foreignKey: 'category_id',      
-    onDelete: 'CASCADE'             
-  })
+  @HasMany(()=> MovieCategory)
   moviecategory:MovieCategory
 
   

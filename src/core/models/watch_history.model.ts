@@ -10,11 +10,11 @@ export class WatchHistory extends Model {
   declare id: string;
 
   @ForeignKey(() => User)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   user_id: string;
 
   @ForeignKey(() => Movie)
-  @Column(DataType.UUID)
+  @Column({type:DataType.UUID, onDelete: "CASCADE"})
   movie_id: string;
 
   @Column(DataType.INTEGER)
@@ -27,15 +27,9 @@ export class WatchHistory extends Model {
   @Column({ field: 'last_watched', type: DataType.DATE })
   last_watched: Date;
 
-  @BelongsTo(()=> User,{
-    foreignKey:"user_id",
-    onDelete:"CASCADE"
-  })
+  @BelongsTo(()=> User,)
   users:User
 
-  @BelongsTo(()=> Movie,{
-    foreignKey:"movie_id",
-    onDelete:"CASCADE"
-  })
+  @BelongsTo(()=> Movie,)
   movies:Movie
 }

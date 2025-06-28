@@ -8,7 +8,7 @@ import { Movie } from './movies.model';
 import { Review } from './reviews.model';
 import { WatchHistory } from './watch_history.model';
 
-@Table({ tableName: 'users' ,defaultScope:{attributes:{exclude:["password"]}}})
+@Table({ tableName: 'users'})
 export class User extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
@@ -32,23 +32,14 @@ export class User extends Model {
 
 
 
-  @HasOne(() => Profile, {
-    foreignKey: 'user_id',
-    onDelete: 'CASCADE',
-    as: 'profile'
-  })
+  @HasOne(() => Profile,)
+  profile:Profile
 
-  @HasMany(() => UserSubscription, {
-    foreignKey: 'user_id',
-    onDelete: 'CASCADE',
-  })
+  @HasMany(() => UserSubscription, )
   user_subscriptions: UserSubscription;
 
 
-  @HasMany(() => Favorite, {
-  foreignKey: 'user_id',
-  onDelete: 'CASCADE',
-})
+  @HasMany(() => Favorite, )
   favorites: Favorite;
 
   @HasMany(() => Review)

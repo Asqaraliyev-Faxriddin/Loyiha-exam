@@ -67,7 +67,8 @@ export class ProfilesController {
         gender: { type: "string", enum: ["male", "female"] },
         date_of_birth: { type: "string", format: "date" },
         country: { type: "string" },
-        bio: { type: "string" }
+        bio: { type: "string" },
+        phone: { type: "string" }
       },
       required: ["full_name", "gender"]
     }

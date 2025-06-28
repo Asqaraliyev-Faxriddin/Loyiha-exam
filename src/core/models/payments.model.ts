@@ -13,10 +13,7 @@ import {BelongsTo,Column,DataType, Default,ForeignKey,Model,PrimaryKey,Table} fr
     @Column(DataType.UUID)
     user_subscription_id: string;
   
-    @BelongsTo(() => UserSubscription, {
-      foreignKey: 'user_subscription_id',
-      onDelete: 'CASCADE'
-    })
+    @BelongsTo(() => UserSubscription, )
     user_subscription: UserSubscription;
   
     @Column(DataType.DECIMAL(10, 2))

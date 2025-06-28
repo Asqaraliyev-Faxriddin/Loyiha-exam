@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { MovieFile } from 'src/core/models/movie_files.model';
 import { Movie } from 'src/core/models/movies.model';
 import { User } from 'src/core/models/user.model';
+import * as path from "path"
+import* as fs from "fs"
 
 @Injectable()
 export class MovieFilesService {
@@ -63,9 +65,17 @@ export class MovieFilesService {
   }
 
   async remove(id: string) {
-    const deleted = await this.movieFileService.destroy({ where: { id } });
+    let deleted = await this.movieFileService.findByPk(id);
 
     if (!deleted) throw new NotFoundException("Movie file topilmadi");
+    const file_url = deleted.file_url
+    const filePath = path.join(process.cwd(),'uploads', 'files', file_url);
+  
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+ await this.movieFileService.destroy({where:{id}});
 
     return {
       message: "Movie file o'chirildi",

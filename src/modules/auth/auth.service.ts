@@ -60,7 +60,10 @@ export class AuthService {
     
         let User =  await this.UsermodelService.findOne({where:{email:payload.email}}) 
         if(!User) throw new NotFoundException("User not found")
-    
+            
+        if (!payload.password || !User.dataValues.password) {
+                throw new BadRequestException('Parol yoki foydalanuvchi malumoti yoq');
+            }
         let compare = await bcrypt.compare(payload.password,User.dataValues.password)
 
         if(!compare) throw new NotFoundException("Password error")

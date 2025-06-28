@@ -29,6 +29,8 @@ import { UserSubscription } from './core/models/user_subscriptions.model';
 import { Favorite } from './core/models/favorites.model';
 import { Profile } from './core/models/profiles.model';
 import { Category } from './core/models/categories.model';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -50,6 +52,24 @@ import { Category } from './core/models/categories.model';
         synchronize: true, 
       }),
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads','avatar_url'), 
+      serveRoot: '/avatar',
+    },
+    {
+      rootPath: join(process.cwd(), 'uploads','files'), 
+      serveRoot: '/file',
+    },
+    {
+      rootPath: join(process.cwd(), 'uploads','posters'), 
+      serveRoot: '/poster',
+    },
+  
+  ),
+
+
+
+
     AuthModule,
     UserModule,
     ProfilesModule,

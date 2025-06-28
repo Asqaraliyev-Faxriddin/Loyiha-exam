@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { RolesGuard } from 'src/core/guards/role-guard';
@@ -27,7 +27,7 @@ export class UserController {
         return this.userService.AddAdmin(payload)
     }
 
-    @Post("/create/delete/:id")
+    @Delete("/create/delete/:id")
     @Roles(UserRole.SuperAdmin, UserRole.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     delete(@Param("id") id:string){

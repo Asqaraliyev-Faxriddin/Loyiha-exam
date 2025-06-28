@@ -20,7 +20,7 @@ export class ProfilesService {
       throw new ConflictException("Ushbu foydalanuvchining profili allaqachon mavjud");
     }
 
-    const data = await this.profileService.create({...createProfileDto,avatar_url});
+    const data = await this.profileService.create({...createProfileDto,avatar_url,user_id});
     return {
       message: "Profil yaratildi",
       data,
