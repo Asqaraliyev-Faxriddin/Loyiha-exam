@@ -83,7 +83,7 @@ export class ReviewsService {
       throw new NotFoundException("Sharh topilmadi");
     }
 
-    await this.reviewmodel.update(updateReviewDto, { where: { id } });
+    await this.reviewmodel.update(updateReviewDto, { where: { id },returning:true });
 
     return {
       message: "Sharh yangilandi",

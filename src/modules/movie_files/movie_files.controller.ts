@@ -1,25 +1,25 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile,UseInterceptors, Put, UseGuards} from '@nestjs/common';
+import {Controller,Get,Post,Body,Param,Delete,UploadedFile,UseInterceptors,Req,UseGuards, Put,} from '@nestjs/common';
 import { MovieFilesService } from './movie_files.service';
-import { CreateMovieFileDto } from './dto/create-movie_file.dto';
-import { UpdateMovieFileDto } from './dto/update-movie_file.dto';
+import { CreateMovieFileDto, paramdto } from './dto/create-movie_file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { UserRole } from 'src/core/types/user';
-import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { RolesGuard } from 'src/core/guards/role-guard';
 import { Roles } from 'src/core/decorators/roles.decorator';
-import { ApiBearerAuth, ApiTags, ApiConsumes, ApiBody} from '@nestjs/swagger';
+import { RolesGuard } from 'src/core/guards/role-guard';
+import { AuthGuard } from 'src/core/guards/jwt-guard';
+import { UserRole } from 'src/core/types/user';
+import { ApiTags, ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { UpdateMovieFileDto } from './dto/update-movie_file.dto';
 
+@ApiTags('Movie Files')
 @ApiBearerAuth()
-@ApiTags("Movie Files")
 @Controller('api/movie-files')
 export class MovieFilesController {
   constructor(private readonly movieFilesService: MovieFilesService) {}
 
-  @Post("create")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+  @Post('create')
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(
     FileInterceptor('file', {
@@ -28,65 +28,93 @@ export class MovieFilesController {
         filename: (req, file, cb) => {
           const filename = uuidv4() + extname(file.originalname);
           cb(null, filename);
-        }
+        },
       }),
     }),
   )
-  @ApiConsumes('multipart/form-data') 
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-      file: {
-      type: 'string',
-      format: 'binary'
-           },
-      movie_id: {
-      type: 'string',
-      format: 'uuid'
-       },
-      quality: {
-      type: 'string',
-      enum: ['LOW', 'MEDIUM', 'HIGH', 'ULTRA'] 
+        movie_id: { type: 'string', format: 'uuid' },
+        language: { type: 'string' },
+        quality: {
+          type: 'string',
+          enum: ['LOW', 'MEDIUM', 'HIGH', 'ULTRA'],
         },
-      language: {
-        type: 'string'
-        }
+        file: { type: 'string', format: 'binary' },
       },
-      required: ['movie_id', 'quality', 'language']
-    }
+      required: ['movie_id', 'language', 'quality', 'file'],
+    },
   })
-  async create(@Body() createMovieFileDto: CreateMovieFileDto,@UploadedFile() file: Express.Multer.File
+  async create(
+    @Body() dto: CreateMovieFileDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    const filename = file.filename;
-    return this.movieFilesService.create(createMovieFileDto, filename);
+    return this.movieFilesService.create(dto, file.filename);
   }
 
   @Get('all')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  findAll() {
-    return this.movieFilesService.findAll();
-  }
-
-  @Get('one/:id')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
-  findOne(@Param('id') id: string) {
-    return this.movieFilesService.findOne(id);
-  }
-
-  @Put(':id')
   @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+  async findAll(@Req() req:Request) {
+    return this.movieFilesService.findAll(req["user"].id, req["user"].role);
+  }
+  
+  @Get('one/:id')
   @UseGuards(AuthGuard, RolesGuard)
-  update(@Param('id') id: string, @Body() updateMovieFileDto: UpdateMovieFileDto) {
-    return this.movieFilesService.update(id, updateMovieFileDto);
+  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+  async findOne(@Param('id') id: string, @Req() req:Request) {
+    return this.movieFilesService.findOne(id,req["user"].id, req["user"].role);
   }
 
   @Delete(':id')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
   @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
   remove(@Param('id') id: string) {
     return this.movieFilesService.remove(id);
   }
+
+
+  @Put('update/:id')
+  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/files',
+        filename: (req, file, cb) => {
+          const filename = uuidv4() + extname(file.originalname);
+          cb(null, filename);
+        },
+      }),
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        movie_id: { type: 'string', format: 'uuid' },
+        language: { type: 'string' },
+        quality: {
+          type: 'string',
+          enum: ['LOW', 'MEDIUM', 'HIGH', 'ULTRA'],
+        },
+        file: { type: 'string', format: 'binary' },
+      },
+      required: ['movie_id', 'language', 'quality', 'file'],
+    },
+  })
+  async update(
+    @Body() dto: UpdateMovieFileDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req:Request,
+    @Param("id") id:string
+  ) {
+    let userid = req["user"].id
+    return this.movieFilesService.update(id,dto, file,userid);
+  }
+
 }

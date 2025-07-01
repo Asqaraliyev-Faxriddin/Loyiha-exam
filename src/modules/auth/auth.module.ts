@@ -7,12 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtAccesToken } from 'src/common/config/jwt';
 import { RedicModule } from 'src/common/redic/redic.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserSubscription } from 'src/core/models/user_subscriptions.model';
 
 @Global()
 @Global()
 @Module({
   imports: [
-    SequelizeModule.forFeature([User]),
+    SequelizeModule.forFeature([User,UserSubscription]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

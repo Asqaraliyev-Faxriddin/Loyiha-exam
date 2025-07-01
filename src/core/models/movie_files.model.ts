@@ -13,7 +13,7 @@ export class MovieFile extends Model {
   @Column({type:DataType.UUID, onDelete: "CASCADE"})
   movie_id: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING)   
   file_url: string;
 
 //   @ts-ignore
@@ -24,6 +24,6 @@ export class MovieFile extends Model {
   @Column(DataType.STRING)
   language: string;
 
-  @BelongsTo(()=>Movie,)
+  @BelongsTo(()=>Movie)
   movie:Movie
 }

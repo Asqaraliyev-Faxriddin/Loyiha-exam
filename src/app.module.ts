@@ -31,6 +31,7 @@ import { Profile } from './core/models/profiles.model';
 import { Category } from './core/models/categories.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SeaderModule } from './core/seader/seader.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { join } from 'path';
         ],
         autoLoadModels: true,
         synchronize: true, 
+        logging:false
       }),
     }),
     ServeStaticModule.forRoot({
@@ -85,6 +87,7 @@ import { join } from 'path';
     WatchHistoryModule,
     MailerModule,
     RedicModule,
+    SeaderModule,
   ],
   providers: [RedicService],
 })

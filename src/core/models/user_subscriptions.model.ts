@@ -28,7 +28,7 @@ export class UserSubscription extends Model {
   end_date: Date;
 
   @Default('pending_payment')
-  @Column({type:DataType.ENUM(...Object.values(UserSubscriptionStatus))})
+  @Column({type:DataType.ENUM(...Object.values(UserSubscriptionStatus)),defaultValue:"pending_payment"})
   status: string;
 
   @Default(false)

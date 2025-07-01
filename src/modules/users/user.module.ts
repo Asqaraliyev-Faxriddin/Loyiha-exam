@@ -15,6 +15,6 @@ import { JwtModule } from '@nestjs/jwt';
     
     SequelizeModule.forFeature([User])],
   controllers: [UserController],
-  providers: [UserService,AuthGuard]
+  providers: [UserService,AuthGuard],
 })
 export class UserModule {}

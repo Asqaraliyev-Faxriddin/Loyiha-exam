@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { RolesGuard } from 'src/core/guards/role-guard';
@@ -35,7 +35,7 @@ export class UserController {
     }
 
     
-    @Post("/create/update/:id")
+    @Put("/create/update/:id")
     @Roles(UserRole.SuperAdmin, UserRole.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     update(@Param("id") id:string,@Body() payload:CreateAdminDto){

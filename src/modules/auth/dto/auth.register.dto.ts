@@ -9,7 +9,7 @@ export class RegisterAuthDto{
     @IsString()
     username:string
 
-    @ApiProperty({example:"hacerovhacer253@gmail.com"})
+    @ApiProperty({example:"asqaraliyevfaxriddin2011@gmail.com"})
     @IsEmail()
     @IsNotEmpty()
     email:string
@@ -24,7 +24,7 @@ export class RegisterAuthDto{
 export class LoginAuthDto{
 
 
-    @ApiProperty({example:"hacerovhacer253@gmail.com"})
+    @ApiProperty({example:"asqaraliyevfaxriddin2011@gmail.com"})
     @IsEmail()
     @IsNotEmpty()
     email:string

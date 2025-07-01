@@ -1,4 +1,4 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Put } from "@nestjs/common";
 import { Get } from "@nestjs/common";
 import { Post } from "@nestjs/common";
 import { Body } from "@nestjs/common";
@@ -91,12 +91,49 @@ export class ProfilesController {
     return this.profilesService.findOne(id);
   }
 
-  @Patch("update/:id")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
-  update(@Param("id") id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profilesService.update(id, updateProfileDto);
+  @Put("update/:id")
+@Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+@UseGuards(AuthGuard, RolesGuard)
+@UseInterceptors(
+  FileInterceptor("poster", {
+    storage: diskStorage({
+      destination: "./uploads/avatar_url",
+      filename: (req, file, cb) => {
+        const filename = uuidv4() + extname(file.originalname);
+        cb(null, filename);
+      }
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      // @ts-ignore
+      if (!allowedTypes.includes(file.mimetype)) {
+        return cb(new UnsupportedMediaTypeException("Yaroqsiz fayl turi"), false);
+      }
+      cb(null, true);
+    }
+  })
+)
+@ApiConsumes("multipart/form-data")
+@ApiBody({
+  schema: {
+    type: "object",
+    properties: {
+      poster: { type: "string", format: "binary" },
+      full_name: { type: "string" },
+      country: { type: "string" },
+      phone: { type: "string" }
+    },
+  
   }
+})
+update(
+  @Param("id") id: string,
+  @Body() updateProfileDto: UpdateProfileDto,
+  @UploadedFile() file: Express.Multer.File,
+  @Req() req: any
+) {
+  return this.profilesService.update(id, updateProfileDto, file, req.user.id);
+}
 
   @Delete("delete/:id")
   @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)

@@ -9,7 +9,7 @@ export class SubscriptionPlan extends Model {
     declare id: string;
   
     @Column(DataType.STRING)
-    name: string;
+    declare name: string;
   
     @Column(DataType.DECIMAL(10, 2))
     price: number;

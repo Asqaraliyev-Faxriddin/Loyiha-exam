@@ -9,11 +9,14 @@ import { RegisterAuthDto, TokenDto, VerifyDto } from './dto/auth.register.dto';
 import { MailerService } from 'src/common/mailer/mailer.service';
 import { LoginAuthDto } from './dto/auth.register.dto';
 import * as bcrypt from "bcrypt"
+import { UserSubscription } from 'src/core/models/user_subscriptions.model';
 
 @Injectable()
 export class AuthService {
     constructor(@InjectModel(User) private UsermodelService:typeof User,private jwtService:JwtService,private Mailermodel:MailerService,
-    private redic : RedicService
+    private redic : RedicService,
+    @InjectModel(UserSubscription) private userSubscriptionModel:typeof UserSubscription
+    
 ){}
 
 
@@ -111,7 +114,19 @@ export class AuthService {
               })
             this.redic.del(`register:${payload.email}`)
             let tokens = await this.generateToken({id:createUser.dataValues.id,role:createUser.dataValues.role},true)
+            let default_id = '88888888-0000-0000-0000-000000000001';
 
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setDate(startDate.getDate() + 30);
+          
+            await this.userSubscriptionModel.create({
+              user_id: createUser.id,
+              plan_id: default_id,
+              start_date: startDate,
+              end_date: endDate,
+              status: "active",
+            });
               
             return {
                 message: "Ro'yxatdan muvaffaqiyatli o'tdingiz",

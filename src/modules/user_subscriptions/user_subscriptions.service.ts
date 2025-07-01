@@ -10,7 +10,9 @@ import { UserRole } from 'src/core/types/user';
 @Injectable()
 export class UserSubscriptionsService {
   constructor(@InjectModel(UserSubscription) private userSubcription:typeof UserSubscription,
-             @InjectModel(SubscriptionPlan) private Subcriptionplane:typeof SubscriptionPlan
+             @InjectModel(SubscriptionPlan) private Subcriptionplane:typeof SubscriptionPlan,
+             @InjectModel(User) private usermodel:typeof User
+
             ){
   }
   async create(payload: CreateUserSubscriptionDto,user_id:string) {
@@ -47,7 +49,7 @@ export class UserSubscriptionsService {
 
     return data
   }
-
+  
   async findOne(id: string) {
     
     let data = await this.userSubcription.findByPk(id)
@@ -58,8 +60,7 @@ export class UserSubscriptionsService {
 
   async update(id: string, payload: UpdateUserSubscriptionDto) {
     let data = await this.userSubcription.update({...payload},{where:{id}})
-
-    if(!data) throw new NotFoundException("UserSubcription id not found ")
+    if(!data) throw new NotFoundException("UserSubcription id not found ")  
     
       return data
   }
@@ -74,4 +75,5 @@ export class UserSubscriptionsService {
         succase:true
       }
   }
+
 }

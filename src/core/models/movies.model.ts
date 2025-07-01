@@ -1,9 +1,10 @@
-import { BelongsTo, Column, DataType, Default, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 import {subscriptionType } from "../types/user";
 import { MovieFile } from "./movie_files.model";
 import { Review } from "./reviews.model";
 import { MovieCategory } from "./movie_categories.model";
+import { Category } from "./categories.model";
 
 @Table({ tableName: 'movies' })
 export class Movie extends Model {
@@ -50,7 +51,7 @@ export class Movie extends Model {
   movie_categories: MovieCategory[];
 
   @HasMany(() => MovieFile,)
-  movie_files: MovieFile[];
+    movie_files: MovieFile[];
 
   @HasMany(() => Review)
   reviews: Review[];
@@ -58,6 +59,6 @@ export class Movie extends Model {
   @BelongsTo(()=>User,)
   users:User
 
-
-
+  @BelongsToMany(() => Category, () => MovieCategory)
+  categories: Category[];
 }

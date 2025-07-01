@@ -1,23 +1,23 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsEnum,IsOptional } from 'class-validator';
-import { subscriptionType } from 'src/core/types/user';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString, IsNumber, IsEnum,IsOptional } from "class-validator";
+import { subscriptionType } from "src/core/types/user";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
 
 export class CreateMovieDto {
 
-  @ApiProperty({ example: 'Inception'})
+  @ApiProperty({ example: "Inception"})
   @IsNotEmpty()
   @IsString()
   title: string;
 
-  @ApiProperty({ example: 'inception-2010',})
+  @ApiProperty({ example: "inception-2010",})
   @IsNotEmpty()
   @IsString()
   slug: string;
 
-  @ApiProperty({ example: 'Bu film orzular ichiga kirib borish haqida.'})
+  @ApiProperty({ example: "Bu film orzular ichiga kirib borish haqida."})
   @IsNotEmpty()
   @IsString()
   description: string;
@@ -37,12 +37,12 @@ export class CreateMovieDto {
   @IsNumber()
   rating: number;
 
-  @ApiProperty({ example: 'premium'})
+  @ApiProperty({ example: "premium"})
   @IsNotEmpty()
   @IsEnum(subscriptionType)
   subscription_type: subscriptionType;
 
-  @ApiProperty({ example: 'dc0f31a0-8f12-4cf4-91cb-2e68b92f4a89',  })
+  @ApiProperty({ example: "dc0f31a0-8f12-4cf4-91cb-2e68b92f4a89",  })
   @IsNotEmpty()
   @IsString()
   created_by: string;
@@ -50,25 +50,26 @@ export class CreateMovieDto {
 
 
 
+
+
 export class MovieQueryDto {
-
-  @ApiPropertyOptional({ example: 1, })
-  @IsOptional()
-  @Type(() => Number)
-  page?: number;
-
-  @ApiPropertyOptional({ example: 10 })
-  @IsOptional()
-  @Type(() => Number)
-  limit?: number;
-
-  @ApiPropertyOptional({ example: 'avatar'})
+  @ApiPropertyOptional({ example: "Qasoskorlar", description: "Film nomi boyicha qidiruv" })
   @IsOptional()
   @IsString()
   search?: string;
 
-  @ApiPropertyOptional({ example: 'free', })
+  @ApiPropertyOptional({ example: 1, description: "Nechinchi sahifa" })
   @IsOptional()
-  @IsEnum(['free', 'premium'])
-  subscription_type?: 'free' | 'premium';
+  @IsNumber()
+  page?: number;
+
+  @ApiPropertyOptional({ example: 20, description: "Nechta natija chiqarilsin" })
+  @IsOptional()
+  @IsNumber()
+  limit?: number;
+
+  @ApiPropertyOptional({ example: "free" ,description: "Obuna turi" })
+  @IsOptional()
+  @IsEnum(subscriptionType)
+  subscription_type?: string;
 }

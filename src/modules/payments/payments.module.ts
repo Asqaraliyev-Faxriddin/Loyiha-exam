@@ -4,12 +4,14 @@ import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { Payment } from 'src/core/models/payments.model';
 import { UserSubscription } from 'src/core/models/user_subscriptions.model'; 
+import { SubscriptionPlan } from 'src/core/models/subscription_plans.model';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([
       Payment,
-      UserSubscription 
+      UserSubscription ,
+      SubscriptionPlan
     ])
   ],
   controllers: [PaymentsController],

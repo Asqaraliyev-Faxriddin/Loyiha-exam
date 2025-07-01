@@ -20,7 +20,7 @@ export class Category extends Model {
 
 
   @HasMany(()=> MovieCategory)
-  moviecategory:MovieCategory
+  moviecategories:MovieCategory
 
   
 }

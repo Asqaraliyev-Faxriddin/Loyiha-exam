@@ -36,15 +36,15 @@ export class User extends Model {
   profile:Profile
 
   @HasMany(() => UserSubscription, )
-  user_subscriptions: UserSubscription;
+  user_subscriptions: UserSubscription[];
 
 
   @HasMany(() => Favorite, )
-  favorites: Favorite;
+  favorites: Favorite[];
 
   @HasMany(() => Review)
-  reviews: Review;
+  reviews: Review[];
 
   @HasMany(()=> WatchHistory)
-  watchhistories:WatchHistory
+  watchhistories:WatchHistory[]
 }

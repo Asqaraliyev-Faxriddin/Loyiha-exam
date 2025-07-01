@@ -23,3 +23,10 @@ export class CreateMovieFileDto {
 
 
 }
+
+
+export class paramdto {
+
+    @IsUUID()
+    id:string
+}

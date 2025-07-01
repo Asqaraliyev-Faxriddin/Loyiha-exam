@@ -6,10 +6,13 @@ import { Profile } from 'src/core/models/profiles.model';
 import { User } from 'src/core/models/user.model';
 import * as path from "path"
 import * as fs from "fs"
+import { deleteFile } from 'src/common/utils/delete.file';
 
 @Injectable()
 export class ProfilesService {
-  constructor(@InjectModel(Profile) private profileService: typeof Profile) {}
+  constructor(@InjectModel(Profile) private profileService: typeof Profile,
+  @InjectModel(User) private usermodel: typeof User
+) {}
 
   async create(createProfileDto: Required<CreateProfileDto>,avatar_url:string,user_id:string) {
     const status = await this.profileService.findOne({
@@ -41,19 +44,33 @@ export class ProfilesService {
     if (!data) throw new NotFoundException("Profil topilmadi");
 
     return data;
-  }
+  } 
 
-  async update(id: string, updateProfileDto: UpdateProfileDto) {
+  async update(id: string, updateProfileDto: UpdateProfileDto, file: Express.Multer.File, user_id: string) {
     const data = await this.profileService.findByPk(id);
     if (!data) throw new NotFoundException("Profil topilmadi");
+  
+    const user = await this.usermodel.findOne({ where: { id: user_id } });
+    if (!user) throw new NotFoundException("Foydalanuvchi topilmadi");
+  
+    const payload: any = { ...updateProfileDto };
+  
+    if (file) {
 
-    await this.profileService.update(updateProfileDto, { where: { id } });
-
+        await deleteFile(`uploads/avatar_url/${data.dataValues.avatar_url}`);
+      
+      payload.avatar_url = file.filename;
+    }
+  
+    await this.profileService.update(payload, { where: { id } });
+  
     return {
       message: "Profil yangilandi",
+      path:`uploads/avatar_url"${data.dataValues.avatar_url}`,
       data: await this.profileService.findByPk(id),
     };
   }
+  
 
   async remove(id: string) {
     const profile = await this.profileService.findOne({where:{id}});

@@ -66,10 +66,11 @@ export class UserService {
 
     async update(payload:RegisterAuthDto,id:string){
 
-        let data = await this.usermodel.update({...payload},{where:{id}})
+        let data:any= await this.usermodel.update({...payload},{where:{id}})
  
         if(!data) throw new NotFoundException(" user id not found")
- 
+        
+            data = await this.usermodel.findByPk(id)
          return data
      }
 }

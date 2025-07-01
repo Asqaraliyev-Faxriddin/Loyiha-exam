@@ -3,11 +3,12 @@ import { ProfilesService } from './profiles.service';
 import { ProfilesController } from './profiles.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Profile } from 'src/core/models/profiles.model';
+import { User } from 'src/core/models/user.model';
 
 @Module({
-  imports:[SequelizeModule.forFeature([Profile])],
+  imports:[SequelizeModule.forFeature([Profile,User])],
   controllers: [ProfilesController],
   providers: [ProfilesService],
-    
+
 })
 export class ProfilesModule {}

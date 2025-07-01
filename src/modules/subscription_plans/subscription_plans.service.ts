@@ -40,7 +40,7 @@ constructor(@InjectModel(SubscriptionPlan) private subcriptionplan:typeof Subscr
     let oldsubcriptionplan = await this.subcriptionplan.findByPk(id)
     if(!oldsubcriptionplan) throw new NotFoundException()
     
-    let  data = await this.subcriptionplan.update({...updateSubscriptionPlanDto},{where:{id}})
+    let  data = await this.subcriptionplan.update({...updateSubscriptionPlanDto},{where:{id},returning:true})
 
     return {
       message:"subcriptionplan updated",
