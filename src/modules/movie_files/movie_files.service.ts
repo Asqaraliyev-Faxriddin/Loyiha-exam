@@ -78,20 +78,18 @@ console.log(data);
     let type = subcriptionuser?.status || "pending_payment"
 
     if(data.dataValues?.movie.subscription_type == "premium"){
-    if(role == "SUPERADMIN" || role == "ADMIN" || type == "active"){
+      if(role == "SUPERADMIN" || role == "ADMIN" || type == "active"){
 
-      return data
+      return data.dataValues
   
-
-    } else{
-      return {message:"siz premium sotib oling"}
-   
+    } else if(data.dataValues?.movie.subscription_type == 'free'){
+      return data.dataValues
     }
+    return {message:"siz premium sotib oling"}
 
   }
 
 
-return data.dataValues
 
   
 

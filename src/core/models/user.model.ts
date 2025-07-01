@@ -7,6 +7,7 @@ import { Favorite } from './favorites.model';
 import { Movie } from './movies.model';
 import { Review } from './reviews.model';
 import { WatchHistory } from './watch_history.model';
+import { Permission } from './permission.model';
 
 @Table({ tableName: 'users'})
 export class User extends Model {
@@ -47,4 +48,7 @@ export class User extends Model {
 
   @HasMany(()=> WatchHistory)
   watchhistories:WatchHistory[]
+
+  @HasMany(()=>Permission)
+  permissions:Permission
 }

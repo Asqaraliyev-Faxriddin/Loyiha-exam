@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -37,11 +37,18 @@ export class ProfilesService {
     return data;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string,user_id:string) {
+
+    let olduser = await this.usermodel.findOne({where:{id:user_id}})
+    if(!olduser) throw new NotFoundException("user not found")
+
     const data = await this.profileService.findByPk(id, {
       include: [{ model: User, as: 'mainProfile' }],
     });
     if (!data) throw new NotFoundException("Profil topilmadi");
+
+    if(data.user_id != olduser.id) throw new BadRequestException("hamma ozini profilini update qiladi.")
+
 
     return data;
   } 
@@ -53,6 +60,8 @@ export class ProfilesService {
     const user = await this.usermodel.findOne({ where: { id: user_id } });
     if (!user) throw new NotFoundException("Foydalanuvchi topilmadi");
   
+    if(data.user_id != user.id) throw new BadRequestException("hamma ozini profilini update qiladi.")
+
     const payload: any = { ...updateProfileDto };
   
     if (file) {

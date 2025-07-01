@@ -3,21 +3,22 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class RedicService implements OnModuleInit {
-    private client:Redis
+    private client: Redis
 
     onModuleInit() {
-        this.client = new Redis
+        this.client = new Redis(process.env.redis_url as string)
+
     }
 
-    async set(key:string,code:string,second:number){
-        await this.client.set(key,code,"EX",second)
+    async set(key: string, code: string, second: number) {
+        await this.client.set(key, code, "EX", second)
     }
-    
-    async get(key:string){
+
+    async get(key: string) {
         return await this.client.get(key)
     }
-    
-    async del(key:string){
+
+    async del(key: string) {
         await this.client.del(key)
     }
 }

@@ -6,6 +6,8 @@ import { MoviesService } from './movies.service';
 import { MoviesController } from './movies.controller';
 import { Category } from 'src/core/models/categories.model';
 import { User } from 'src/core/models/user.model';
+import { PermissionGuard } from 'src/core/guards/role-guard';
+import { Permission } from 'src/core/models/permission.model';
 
 @Module({
   imports: [
@@ -13,10 +15,11 @@ import { User } from 'src/core/models/user.model';
       MovieFile,
       Movie,
       Category,
-      User
+      User,
+      Permission
     ]),
   ],
   controllers: [MoviesController],
-  providers: [MoviesService],
+  providers: [MoviesService,PermissionGuard],
 })
 export class MoviesModule {}

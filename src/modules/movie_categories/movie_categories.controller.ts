@@ -2,10 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } fro
 import { MovieCategoriesService } from './movie_categories.service';
 import { CreateMovieCategoryDto } from './dto/create-movie_category.dto';
 import { UpdateMovieCategoryDto } from './dto/update-movie_category.dto';
-import { Roles } from 'src/core/decorators/roles.decorator';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { RolesGuard } from 'src/core/guards/role-guard';
-import { UserRole } from 'src/core/types/user';
+import { PermissionGuard,  } from 'src/core/guards/role-guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 
@@ -16,15 +14,13 @@ export class MovieCategoriesController {
   constructor(private readonly movieCategoriesService: MovieCategoriesService) {}
 
   @Post()
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   create(@Body() createMovieCategoryDto: CreateMovieCategoryDto) {
     return this.movieCategoriesService.create(createMovieCategoryDto);
   }
 
   @Get("all")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   findAll() {
     return this.movieCategoriesService.findAll();
   }
@@ -35,15 +31,13 @@ export class MovieCategoriesController {
   }
 
   @Put('update/:id')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   update(@Param('id') id: string, @Body() updateMovieCategoryDto: UpdateMovieCategoryDto) {
     return this.movieCategoriesService.update(id, updateMovieCategoryDto);
   }
 
   @Delete('update/:id')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   remove(@Param('id') id: string) {
     return this.movieCategoriesService.remove(id);
   }

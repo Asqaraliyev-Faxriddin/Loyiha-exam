@@ -1,11 +1,10 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserSubscriptionDto } from './dto/create-user_subscription.dto';
 import { UpdateUserSubscriptionDto } from './dto/update-user_subscription.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserSubscription } from 'src/core/models/user_subscriptions.model';
 import { User } from 'src/core/models/user.model';
 import { SubscriptionPlan } from 'src/core/models/subscription_plans.model';
-import { UserRole } from 'src/core/types/user';
 
 @Injectable()
 export class UserSubscriptionsService {
@@ -50,25 +49,40 @@ export class UserSubscriptionsService {
     return data
   }
   
-  async findOne(id: string) {
+  async findOne(id: string,user_id:string) {
+    let olduser = await this.usermodel.findOne({where:{id:user_id}})
     
     let data = await this.userSubcription.findByPk(id)
-    if(!data) throw new NotFoundException("UserSubcription id not found ")
+      if(!data) throw new NotFoundException("UserSubcription id not found ")
+      if(!olduser) throw new NotFoundException("user not found")
+      if(olduser.id !== data.user_id) throw new BadRequestException()
 
       return data
   }
 
-  async update(id: string, payload: UpdateUserSubscriptionDto) {
-    let data = await this.userSubcription.update({...payload},{where:{id}})
-    if(!data) throw new NotFoundException("UserSubcription id not found ")  
+  async update(id: string, payload: UpdateUserSubscriptionDto,user_id:string) {
+    let olduser = await this.usermodel.findOne({where:{id:user_id}})
+    let oldsubcriptoin = await this.userSubcription.findByPk(id)
+
+    if(!oldsubcriptoin) throw new NotFoundException("UserSubcription id not found ")  
+    if(!olduser) throw new NotFoundException("user not found")
+    if(olduser?.id !== oldsubcriptoin.user_id) throw new BadRequestException()
+      let data = await this.userSubcription.update({...payload},{where:{id}})
     
+
       return data
   }
 
-  async remove(id: string) {
+  async remove(id: string,user_id:string) {
+    let olduser = await this.usermodel.findOne({where:{id:user_id}})
+    let oldsubcriptoin = await this.userSubcription.findByPk(id)
+
     
-    let data = await this.userSubcription.destroy({where:{id}})
-    if(!data) throw new NotFoundException("UserSubcription id not found ")
+      if(!oldsubcriptoin) throw new NotFoundException("UserSubcription id not found ")
+      if(!olduser) throw new NotFoundException("user not found")
+      if(olduser?.id !== oldsubcriptoin.user_id) throw new BadRequestException()
+        
+        await this.userSubcription.destroy({where:{id}})
 
       return {
         message:"UserSubcription deleted",

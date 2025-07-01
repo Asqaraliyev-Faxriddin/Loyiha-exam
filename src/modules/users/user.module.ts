@@ -5,6 +5,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/core/models/user.model';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { JwtModule } from '@nestjs/jwt';
+import { PermissionGuard } from 'src/core/guards/role-guard';
+import { Permission } from 'src/core/models/permission.model';
 
 @Module({
   imports:[
@@ -13,8 +15,8 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '7d' },
     }),
     
-    SequelizeModule.forFeature([User])],
+    SequelizeModule.forFeature([User,Permission])],
   controllers: [UserController],
-  providers: [UserService,AuthGuard],
+  providers: [UserService,AuthGuard,PermissionGuard],
 })
 export class UserModule {}

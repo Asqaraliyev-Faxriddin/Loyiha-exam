@@ -5,8 +5,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { Roles } from 'src/core/decorators/roles.decorator';
-import { RolesGuard } from 'src/core/guards/role-guard';
+import { PermissionGuard } from 'src/core/guards/role-guard';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { UserRole } from 'src/core/types/user';
 import { ApiTags, ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -19,8 +18,7 @@ export class MovieFilesController {
   constructor(private readonly movieFilesService: MovieFilesService) {}
 
   @Post('create')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -56,30 +54,26 @@ export class MovieFilesController {
   }
 
   @Get('all')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+  @UseGuards(AuthGuard, )
   async findAll(@Req() req:Request) {
     return this.movieFilesService.findAll(req["user"].id, req["user"].role);
   }
   
   @Get('one/:id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
+  @UseGuards(AuthGuard, )
   async findOne(@Param('id') id: string, @Req() req:Request) {
     return this.movieFilesService.findOne(id,req["user"].id, req["user"].role);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, PermissionGuard)
   remove(@Param('id') id: string) {
     return this.movieFilesService.remove(id);
   }
 
 
   @Put('update/:id')
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({

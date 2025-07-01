@@ -7,9 +7,8 @@ import { extname } from "path";
 import { v4 as uuidv4 } from "uuid";
 import { Express } from "express";
 import { UserRole } from "src/core/types/user";
-import { Roles } from "src/core/decorators/roles.decorator";
 import { AuthGuard } from "src/core/guards/jwt-guard";
-import { RolesGuard } from "src/core/guards/role-guard";
+import { PermissionGuard } from "src/core/guards/role-guard";
 import { ApiBearerAuth, ApiExtraModels, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiConsumes } from "@nestjs/swagger";
@@ -23,8 +22,7 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post("create")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor("poster", {
       storage: diskStorage({
@@ -85,8 +83,7 @@ export class MoviesController {
   }
 
   @Get("all")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, )
   findAll() {
     return this.moviesService.findAll();
   }
@@ -94,15 +91,14 @@ export class MoviesController {
   @ApiExtraModels(MovieQueryDto)
   @ApiQuery({ name: 'query', type: MovieQueryDto })
   @Get("one/query")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
+
+  @UseGuards(AuthGuard,)
   findOne(@Query() payload: any) {
     return this.moviesService.findQueryAll(payload);
   }
 
   @Delete("delete/:id")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   remowe(@Param("id") id: string) {
     return this.moviesService.remove(id);
   }
@@ -110,8 +106,7 @@ export class MoviesController {
 
   
   @Put("update/:id")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor("poster", {
       storage: diskStorage({

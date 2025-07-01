@@ -3,10 +3,9 @@ import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { RolesGuard } from 'src/core/guards/role-guard';
-import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserRole } from 'src/core/types/user';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PermissionGuard } from 'src/core/guards/role-guard';
 
 
 @ApiBearerAuth()
@@ -22,8 +21,7 @@ export class PaymentsController {
   }
 
   @Get("all")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   findAll() {
     return this.paymentsService.findAll();
   }

@@ -18,9 +18,8 @@ import { diskStorage } from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { extname } from "path";
 import { UserRole } from "src/core/types/user";
-import { Roles } from "src/core/decorators/roles.decorator";
 import { AuthGuard } from "src/core/guards/jwt-guard";
-import { RolesGuard } from "src/core/guards/role-guard";
+import { PermissionGuard } from "src/core/guards/role-guard";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiConsumes } from "@nestjs/swagger";
@@ -33,8 +32,7 @@ export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
   @Post("create")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor("poster", {
       storage: diskStorage({
@@ -78,22 +76,20 @@ export class ProfilesController {
   }
 
   @Get("all")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   findAll() {
     return this.profilesService.findAll();
   }
 
   @Get("one/:id")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
-  findOne(@Param("id") id: string) {
-    return this.profilesService.findOne(id);
+  @UseGuards(AuthGuard, PermissionGuard)
+  findOne(@Param("id") id: string,@Req() req:Request) {
+    let user_id = req["user"].id
+    return this.profilesService.findOne(id,user_id);
   }
 
   @Put("update/:id")
-@Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard, PermissionGuard)
 @UseInterceptors(
   FileInterceptor("poster", {
     storage: diskStorage({
@@ -136,8 +132,7 @@ update(
 }
 
   @Delete("delete/:id")
-  @Roles(UserRole.SuperAdmin, UserRole.Admin, UserRole.User)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, PermissionGuard)
   remove(@Param("id") id: string) {
     return this.profilesService.remove(id);
   }

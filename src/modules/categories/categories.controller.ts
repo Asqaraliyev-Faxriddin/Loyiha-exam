@@ -4,10 +4,9 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Request } from 'express';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { RolesGuard } from 'src/core/guards/role-guard';
-import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserRole } from 'src/core/types/user';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PermissionGuard } from 'src/core/guards/role-guard';
 
 @ApiBearerAuth()
 @ApiTags("Category")
@@ -16,37 +15,32 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post('create')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, PermissionGuard)
   create( @Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @Get('all')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, )
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get('one')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin,UserRole.User)
-  findOne(@Query() payload: any) {
+  @UseGuards(AuthGuard, )
+  findOne(@Query() payload: any,) {
     return this.categoriesService.findOne(payload);
   }
 
   @Put('update/:id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, PermissionGuard)
   update(@Req() req: Request,@Param('id', ParseIntPipe) id: number,@Body() updateCategoryDto: UpdateCategoryDto,) {
 
     return this.categoriesService.update(id,updateCategoryDto);
   }
 
   @Delete('delete/:id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SuperAdmin, UserRole.Admin)
+  @UseGuards(AuthGuard, PermissionGuard)
   remove( @Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.remove(id);
   }

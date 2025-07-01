@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { RolesGuard } from 'src/core/guards/role-guard';
-import { Roles } from 'src/core/decorators/roles.decorator';
+import { PermissionGuard } from 'src/core/guards/role-guard';
+
 import { UserRole } from 'src/core/types/user';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -14,31 +14,26 @@ export class UserController {
     constructor(private readonly userService:UserService){}
 
     @Get("users")
-    @Roles(UserRole.Admin,UserRole.SuperAdmin)
-    @UseGuards(AuthGuard,RolesGuard)
+    @UseGuards(AuthGuard,PermissionGuard)
     getAllUsers(){
         return this.userService.findAll()
     }
 
-    @Post("/create/add/admin")
-    @Roles(UserRole.SuperAdmin, UserRole.Admin)
-    @UseGuards(AuthGuard, RolesGuard)
-    AddAdmin(@Body() payload:CreateAdminDto){
-        return this.userService.AddAdmin(payload)
-    }
 
-    @Delete("/create/delete/:id")
-    @Roles(UserRole.SuperAdmin, UserRole.Admin)
-    @UseGuards(AuthGuard, RolesGuard)
-    delete(@Param("id") id:string){
+    @Delete("user/delete")
+    
+    @UseGuards(AuthGuard, )
+    delete(@Req() req :Request){
+        let id = req["user"].id
         return this.userService.delete(id)
     }
 
     
-    @Put("/create/update/:id")
-    @Roles(UserRole.SuperAdmin, UserRole.Admin)
-    @UseGuards(AuthGuard, RolesGuard)
-    update(@Param("id") id:string,@Body() payload:CreateAdminDto){
+    @Put("user/update")
+    @UseGuards(AuthGuard, )
+    update(@Req() req :Request,@Body() payload:CreateAdminDto){
+        let id = req["user"].id
+
         return this.userService.update(payload,id)
     }
 

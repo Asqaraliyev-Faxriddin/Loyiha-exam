@@ -43,17 +43,7 @@ export class UserService {
         return data;
     }
 
-    async AddAdmin(payload:CreateAdminDto){
-        let user =  await this.usermodel.findOne({where:{username:payload.username}}) 
-        let email =  await this.usermodel.findOne({where:{email:payload.email}}) 
-       
-        if(user ) throw new ConflictException("username already")
-        if(email ) throw new ConflictException("email already")
 
-        let data = await this.usermodel.create({...payload,role:UserRole.Admin})
-
-        return data
-    }
 
     async delete(id:string){
 

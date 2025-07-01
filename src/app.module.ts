@@ -32,6 +32,9 @@ import { Category } from './core/models/categories.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SeaderModule } from './core/seader/seader.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { Permission } from './core/models/permission.model';
+import { PermissionModule } from './core/guards/permisison.module';
 
 @Module({
   imports: [
@@ -47,7 +50,7 @@ import { SeaderModule } from './core/seader/seader.module';
         database: config.get('DB_NAME'),
         models: [
         User, SubscriptionPlan, UserSubscription, Payment,Movie,WatchHistory,
-        Review,MovieFile,MovieCategory,Favorite,Profile,Category
+        Review,MovieFile,MovieCategory,Favorite,Profile,Category,Permission
         ],
         autoLoadModels: true,
         synchronize: true, 
@@ -74,6 +77,7 @@ import { SeaderModule } from './core/seader/seader.module';
 
     AuthModule,
     UserModule,
+    AdminModule,
     ProfilesModule,
     SubscriptionPlansModule,
     UserSubscriptionsModule,
@@ -88,6 +92,8 @@ import { SeaderModule } from './core/seader/seader.module';
     MailerModule,
     RedicModule,
     SeaderModule,
+    PermissionModule,
+
   ],
   providers: [RedicService],
 })
