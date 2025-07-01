@@ -125,7 +125,7 @@ export class AuthService {
               plan_id: default_id,
               start_date: startDate,
               end_date: endDate,
-              status: "active",
+              status: "pending_payment",
             });
               
             return {
