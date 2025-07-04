@@ -5,7 +5,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Request } from 'express';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { UserRole } from 'src/core/types/user';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionGuard } from 'src/core/guards/role-guard';
 
 @ApiBearerAuth()
@@ -14,24 +14,28 @@ import { PermissionGuard } from 'src/core/guards/role-guard';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Post('create')
   @UseGuards(AuthGuard, PermissionGuard)
   create( @Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @Get('all')
   @UseGuards(AuthGuard, )
   findAll() {
     return this.categoriesService.findAll();
   }
 
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @Get('one')
   @UseGuards(AuthGuard, )
   findOne(@Query() payload: any,) {
     return this.categoriesService.findOne(payload);
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Put('update/:id')
   @UseGuards(AuthGuard, PermissionGuard)
   update(@Req() req: Request,@Param('id', ParseIntPipe) id: number,@Body() updateCategoryDto: UpdateCategoryDto,) {
@@ -39,6 +43,7 @@ export class CategoriesController {
     return this.categoriesService.update(id,updateCategoryDto);
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Delete('delete/:id')
   @UseGuards(AuthGuard, PermissionGuard)
   remove( @Param('id', ParseIntPipe) id: number) {

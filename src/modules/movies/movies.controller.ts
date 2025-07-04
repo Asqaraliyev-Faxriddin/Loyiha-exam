@@ -9,7 +9,7 @@ import { Express } from "express";
 import { UserRole } from "src/core/types/user";
 import { AuthGuard } from "src/core/guards/jwt-guard";
 import { PermissionGuard } from "src/core/guards/role-guard";
-import { ApiBearerAuth, ApiExtraModels, ApiParam, ApiQuery } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiConsumes } from "@nestjs/swagger";
 import { ApiBody } from "@nestjs/swagger";
@@ -22,6 +22,7 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post("create")
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor("poster", {
@@ -83,6 +84,7 @@ export class MoviesController {
   }
 
   @Get("all")
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, )
   findAll() {
     return this.moviesService.findAll();
@@ -91,13 +93,14 @@ export class MoviesController {
   @ApiExtraModels(MovieQueryDto)
   @ApiQuery({ name: 'query', type: MovieQueryDto })
   @Get("one/query")
-
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @UseGuards(AuthGuard,)
   findOne(@Query() payload: any) {
     return this.moviesService.findQueryAll(payload);
   }
 
   @Delete("delete/:id")
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @UseGuards(AuthGuard, PermissionGuard)
   remowe(@Param("id") id: string) {
     return this.moviesService.remove(id);

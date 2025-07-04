@@ -20,7 +20,7 @@ import { extname } from "path";
 import { UserRole } from "src/core/types/user";
 import { AuthGuard } from "src/core/guards/jwt-guard";
 import { PermissionGuard } from "src/core/guards/role-guard";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiConsumes } from "@nestjs/swagger";
 import { ApiBody } from "@nestjs/swagger";
@@ -32,7 +32,8 @@ export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
   @Post("create")
-  @UseGuards(AuthGuard, PermissionGuard)
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
+  @UseGuards(AuthGuard, )
   @UseInterceptors(
     FileInterceptor("poster", {
       storage: diskStorage({
@@ -76,20 +77,23 @@ export class ProfilesController {
   }
 
   @Get("all")
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
   findAll() {
     return this.profilesService.findAll();
   }
 
   @Get("one/:id")
-  @UseGuards(AuthGuard, PermissionGuard)
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
+  @UseGuards(AuthGuard, )
   findOne(@Param("id") id: string,@Req() req:Request) {
     let user_id = req["user"].id
     return this.profilesService.findOne(id,user_id);
   }
 
   @Put("update/:id")
-@UseGuards(AuthGuard, PermissionGuard)
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
+@UseGuards(AuthGuard, )
 @UseInterceptors(
   FileInterceptor("poster", {
     storage: diskStorage({
@@ -132,7 +136,8 @@ update(
 }
 
   @Delete("delete/:id")
-  @UseGuards(AuthGuard, PermissionGuard)
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
+  @UseGuards(AuthGuard, )
   remove(@Param("id") id: string) {
     return this.profilesService.remove(id);
   }

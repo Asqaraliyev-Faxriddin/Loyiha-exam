@@ -4,7 +4,7 @@ import { CreateAdminDto, PermissionDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { UserRole } from 'src/core/types/user';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
-import { ApiBearerAuth, ApiBody, ApiProperty } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiProperty } from '@nestjs/swagger';
 import { PermissionGuard } from 'src/core/guards/role-guard';
 
 @ApiBearerAuth()
@@ -19,34 +19,36 @@ export class AdminController {
     return this.adminService.create(id,createAdminDto);
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Get("permission/all")
   @UseGuards(AuthGuard, PermissionGuard)
-
   findAll() {
     return this.adminService.findAll();
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Get('one/permision/:id')
   @UseGuards(AuthGuard, PermissionGuard)
-
   findOne(@Param('id') id: string) {
     return this.adminService.findOne(id);
   }
 
-  @Put('update/permision/:id')
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
-
+  @Put('update/permision/:id')
   update(@Param('id') id: string, @Body() updateAdminDto: PermissionDto) {
     return this.adminService.update(id, updateAdminDto);
   }
 
-  @Delete('delete/permision/:id')
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
+  @Delete('delete/permision/:id')
   remove(@Param('id') id: string) {
     return this.adminService.remove(id);
   }
 
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Get("/admin/all")
   @UseGuards(AuthGuard, PermissionGuard)
   AdminAll(){
@@ -54,12 +56,14 @@ export class AdminController {
       return this.adminService.AdminAll()
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Post("/create/add/admin")
   @UseGuards(AuthGuard, PermissionGuard)
   AddAdmin(@Body() payload:CreateAdminDto){
       return this.adminService.AddAdmin(payload)
   }
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Put("/update/admin")
   @UseGuards(AuthGuard, PermissionGuard)
   UpdateAdmin(@Body() payload:Required<UpdateAdminDto>,@Req() req:Request){
@@ -68,6 +72,7 @@ export class AdminController {
   }
 
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Delete("/delete/admin/:id")
   @UseGuards(AuthGuard, PermissionGuard)
   DeleteAdmin(@Param("id") id:string){

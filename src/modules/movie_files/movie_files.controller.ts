@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PermissionGuard } from 'src/core/guards/role-guard';
 import { AuthGuard } from 'src/core/guards/jwt-guard';
 import { UserRole } from 'src/core/types/user';
-import { ApiTags, ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { UpdateMovieFileDto } from './dto/update-movie_file.dto';
 
 @ApiTags('Movie Files')
@@ -18,6 +18,7 @@ export class MovieFilesController {
   constructor(private readonly movieFilesService: MovieFilesService) {}
 
   @Post('create')
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor('file', {
@@ -54,18 +55,21 @@ export class MovieFilesController {
   }
 
   @Get('all')
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @UseGuards(AuthGuard, )
   async findAll(@Req() req:Request) {
     return this.movieFilesService.findAll(req["user"].id, req["user"].role);
   }
   
   @Get('one/:id')
+  @ApiOperation({ summary: "SuperAdmin va Admin keyin User uchun" })
   @UseGuards(AuthGuard, )
   async findOne(@Param('id') id: string, @Req() req:Request) {
     return this.movieFilesService.findOne(id,req["user"].id, req["user"].role);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
   remove(@Param('id') id: string) {
     return this.movieFilesService.remove(id);
@@ -73,6 +77,7 @@ export class MovieFilesController {
 
 
   @Put('update/:id')
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @UseGuards(AuthGuard, PermissionGuard)
   @UseInterceptors(
     FileInterceptor('file', {
