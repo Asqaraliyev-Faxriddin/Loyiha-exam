@@ -12,7 +12,7 @@ export class WatchHistoryService {
 
 
   async findAll() {
-    let data = this.watchHistoryModel.findAll({
+    let payload = this.watchHistoryModel.findAll({
       include:[
         {
           model:User
@@ -24,7 +24,7 @@ export class WatchHistoryService {
     })
 
 
-    return data
+    return payload
   }
 
   async updateWatchHistory(dto: CreateWatchHistoryDto,user_id:string) {
