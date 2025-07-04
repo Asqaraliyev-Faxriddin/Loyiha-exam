@@ -12,6 +12,7 @@ import { PermissionGuard } from 'src/core/guards/role-guard';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @ApiOperation({ summary: "faqat Admin va SuperAdmin huquqi bor." })
   @Post("create/permission/:admin_id")
   @ApiBody({type:PermissionDto})
   @UseGuards(AuthGuard, PermissionGuard)
